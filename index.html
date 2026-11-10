@@ -846,6 +846,22 @@ ul.short b{display:block;font:600 13px var(--display);letter-spacing:.06em;text-
 .howto ol{margin:6px 0 0;padding-left:20px}
 .howto{margin-bottom:14px}
 
+#start{position:fixed;inset:0;z-index:5000;background:var(--paper);display:flex;align-items:center;justify-content:center;padding:24px}
+#start.off{display:none}
+#start .in{max-width:26rem;width:100%;display:flex;flex-direction:column;gap:12px}
+#start h1{font-size:44px;text-transform:uppercase;line-height:.95}
+#start p{margin:0 0 6px;font-size:18px}
+#start .when,.next .when{font:600 14px var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0}
+#start .fine{font-size:14px;color:var(--muted)}
+.btn.big{padding:15px 18px;font-size:21px}
+.next{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--brass);border-radius:10px;padding:14px;margin-bottom:16px}
+.next h2{font-size:28px;margin:2px 0 4px}
+.next p{margin:0 0 10px}
+.next .acts{display:flex;gap:8px;flex-wrap:wrap}
+#sheetNav{display:flex;gap:8px;padding:10px 16px;background:var(--card);border-top:1px solid var(--line)}
+#sheetNav[hidden]{display:none}
+#sheetNav .btn:last-child{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
 </style>
 </head>
 <body>
@@ -894,8 +910,8 @@ ul.short b{display:block;font:600 13px var(--display);letter-spacing:.06em;text-
 
 <section class="view" id="v-tour" aria-label="Tour stops">
   <div class="scroll">
-    <div class="note howto"><b>On the field</b><ol><li>Tap the stop you are standing at, here or on the Map.</li><li>Read the three lines at the top: what, who, why it matters.</li><li>Tap <b>I'm here: look around</b>. The Look tab draws the ground in front of you with every landmark labelled. Drag it until it matches what you see.</li><li>Tap any label, or <b>The full account</b>, when you want more.</li></ol></div>
-    <p class="lead">Twenty-two stops in driving order. The route follows the Park Service's 16-stop auto tour, with six added stops the tour passes by. Tap a stop to read it. Tick it when you have seen it.</p>
+    <div id="tourNow"></div>
+    <p class="lead">All 22 stops in driving order, following the Park Service's auto tour. Tap any stop to read it.</p>
     <ol class="tour" id="tourList"></ol>
   </div>
 </section>
@@ -1035,11 +1051,7 @@ ul.short b{display:block;font:600 13px var(--display);letter-spacing:.06em;text-
     </ul>
     <h3>Read knowing what it is</h3>
     <p>Michael Shaara's novel <i>The Killer Angels</i> (1974) and the film made from it are fine storytelling built largely on Longstreet's and Chamberlain's own memoirs. They are the source of much of what visitors expect to see. Enjoy them, and check them against the reports.</p>
-  </div>
-</section>
 
-<section class="view" id="v-src" aria-label="Sources">
-  <div class="scroll prose">
     <h2>Sources</h2>
     <p class="lead">Everything in this guide comes from the record made by participants or from the scholars and institutions below. Where they disagree, the stop page says so.</p>
     <h3>Written by participants</h3>
@@ -1095,21 +1107,36 @@ ul.short b{display:block;font:600 13px var(--display);letter-spacing:.06em;text-
       <li>The relief, the 3D model and the drawn ground in Look come from NASA's SRTM elevation survey, about 30 metres between points. They show the shape of the land, not trees, fences or buildings. A label marked "behind high ground" is hidden according to that data.</li>
       <li>In Look, the labels are placed by compass bearing from where you stand. Trees and ridges will hide some of what they point to.</li>
     </ul>
+  
   </div>
 </section>
+
+
 
 <div id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
   <header><div><div class="when" id="sheetWhen"></div><h2 id="sheetTitle"></h2></div><button class="btn ghost" id="sheetClose">Close</button></header>
   <div class="scroll prose" id="sheetBody"></div>
+  <div id="sheetNav"></div>
 </div>
 <div id="toast" role="status"></div>
+<div id="start">
+  <div class="in">
+    <p class="when">July 1 to 3, 1863</p>
+    <h1>Gettysburg Field Guide</h1>
+    <p>Point your phone at the battlefield and see what happened where you are looking. Or follow the tour, stop by stop.</p>
+    <button class="btn big" id="goCam">Open the camera</button>
+    <button class="btn big ghost" id="goTour">Start the guided tour</button>
+    <button class="btn big ghost" id="goMap">See the map</button>
+    <button class="btn ghost" id="share" hidden>Share with friends</button>
+    <p class="fine" id="startNote">Allow camera, motion and location when your phone asks. Hold the phone upright.</p>
+  </div>
+</div>
 </main>
 <nav class="tabs" role="tablist">
-  <button data-tab="map" class="on" role="tab">Map</button>
-  <button data-tab="look" role="tab">Look</button>
+  <button data-tab="look" role="tab">Camera</button>
   <button data-tab="tour" role="tab">Tour</button>
-  <button data-tab="brief" role="tab">Brief</button>
-  <button data-tab="src" role="tab">Sources</button>
+  <button data-tab="map" role="tab">Map</button>
+  <button data-tab="brief" role="tab">Read</button>
 </nav>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
@@ -1646,13 +1673,13 @@ function drawTerrain(W,H,pos,eye,hd,fov,on){
 /* ---------- state ---------- */
 var store={get:function(k,d){try{var v=localStorage.getItem("gb."+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
            set:function(k,v){try{localStorage.setItem("gb."+k,JSON.stringify(v))}catch(e){}}};
-var S={tab:store.get("tab","map"),here:store.get("here","angle"),done:store.get("done",{}),phase:store.get("phase","d1a"),
+var S={tab:store.get("tab","look"),here:store.get("here","angle"),done:store.get("done",{}),phase:store.get("phase","d1a"),
        gps:null,gpsFar:false,useGps:false,watch:null,
        heading:270,raw:null,offset:0,sensor:false,absSeen:false,
        live:false,cam:false,pic:false,stream:null,fov:60,m3:false};
 if(!byId[S.here]||byId[S.here].k!=="stop")S.here="angle";
 if(!PH[S.phase])S.phase="d1a";
-if(["map","look","tour","brief","src"].indexOf(S.tab)<0)S.tab="map";
+if(["map","look","tour","brief"].indexOf(S.tab)<0)S.tab="look";
 
 function curPos(){return (S.useGps&&S.gps)?S.gps:byId[S.here]}
 function nearestStop(pos){var best=null,bd=1e12;STOPS.forEach(function(p){var d=dist(pos,p);if(d<bd){bd=d;best=p}});return {p:best,d:bd}}
@@ -1694,6 +1721,10 @@ function openSheet(id){
   if(p.src){h+='<details><summary>Sources</summary><ul class="src">';p.src.forEach(function(s){h+="<li>"+esc(s)+"</li>"});h+="</ul></details>"}
   if(p.k!=="stop"||S.useGps)h+='<p class="lead">'+fmtD(dist(pos,p))+" "+pt(brg(pos,p))+" of "+(S.useGps?"you":esc(byId[S.here].n))+".</p>";
   var body=$("#sheetBody");body.innerHTML=h;body.scrollTop=0;
+  var nav=$("#sheetNav"),i=STOPS.indexOf(p),nh="";
+  if(i>=0){if(i>0)nh+='<button class="btn ghost" data-act="go" data-id="'+STOPS[i-1].id+'">\u2190 Back</button>';
+    if(i<STOPS.length-1)nh+='<button class="btn" data-act="next" data-cur="'+p.id+'" data-id="'+STOPS[i+1].id+'">Next: '+esc(STOPS[i+1].n)+' \u2192</button>'}
+  nav.innerHTML=nh;nav.hidden=!nh;
   $("#sheet").classList.add("on");
 }
 function closeSheet(){$("#sheet").classList.remove("on")}
@@ -1715,6 +1746,10 @@ function renderTour(){
       '</p></button><input type="checkbox" id="done-'+p.id+'" data-id="'+p.id+'" aria-label="Visited '+esc(p.n)+'"'+(S.done[p.id]?" checked":"")+"></li>";
   });
   $("#tourList").innerHTML=h;
+  var main=STOPS.filter(function(p){return !p.opt}),nx=null,k=0;for(var q=0;q<main.length;q++){if(!S.done[main[q].id]){nx=main[q];k=q;break}}
+  $("#tourNow").innerHTML=nx?'<div class="next"><div class="when">'+(k===0?"Start here":"Next stop")+" · "+(k+1)+" of "+main.length+(S.useGps?" · "+fmtD(dist(pos,nx))+" away":"")+"</div><h2>"+esc(nx.n)+"</h2><p>"+esc(SUM[nx.id][0])+
+    '</p><div class="acts"><button class="btn open" data-id="'+nx.id+'">Open this stop</button><a class="btn ghost" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination='+nx.lat+","+nx.lon+'">Drive there</a></div></div>':
+    '<div class="next"><h2>Tour complete</h2><p>You have seen every stop. The optional stops and the reading list are still here.</p></div>';
 }
 
 /* ---------- map ---------- */
@@ -1816,6 +1851,7 @@ function startGps(quiet){
         else{S.useGps=true;sitStop=null;markHere()}
         syncHereSelect();
       }
+      if(!S.gpsFar){var ar=nearestStop(S.gps);if(ar.d<130&&S.arrived!==ar.p.id){S.arrived=ar.p.id;toast("You are at "+ar.p.n+". "+SUM[ar.p.id][0])}}
       showMe();lookDirty=true;if(S.tab==="tour")renderTour();
     },function(){setStat("gps",false);try{navigator.geolocation.clearWatch(S.watch)}catch(e){}S.watch=null;S.useGps=false;syncHereSelect();
       if(!quiet)toast("GPS is blocked here. Pick your stop from the list instead.")},
@@ -1923,13 +1959,13 @@ function updateSit(pos,hd){
     sitStop=p.id;sitActive=-2;
     var ch=$("#sitChips"),h="";views.forEach(function(v,i){h+='<button class="chip" data-i="'+i+'"></button>'});ch.innerHTML=h;ch.scrollLeft=0;
   }
-  $("#sitTitle").textContent=nr.d<220?p.n:fmtD(nr.d)+" from "+p.n;
+  $("#sitTitle").textContent=nr.d<220?(S.useGps?"You are at ":"")+p.n:fmtD(nr.d)+" from "+p.n;
   var act=-1,best=24,chips=$("#sitChips").children;
   views.forEach(function(v,i){var d=n180(viewBrg(pos,v)-hd),a=Math.abs(d);if(a<best){best=a;act=i}
     chips[i].textContent=(a<12?"":(d<0?"← ":""))+viewName(v)+(a<12?"":(d>0?" →":""));});
   if(act!==sitActive){sitActive=act;
     for(var i=0;i<chips.length;i++)chips[i].classList.toggle("on",i===act);
-    $("#sitText").textContent=act>=0?views[act].t:p.s+" Turn toward one of the directions below, or tap one.";
+    $("#sitText").textContent=act>=0?views[act].t:(nr.d<400?SUM[p.id][0]:"You are between stops. The nearest is "+p.n+".")+" Turn toward one of the directions below.";
     $("#sitWhen").textContent=(act>=0?"Facing "+viewName(views[act])+" · ":"")+(p.when||"");
   }
 }
@@ -1943,6 +1979,19 @@ function init(){
     else if(S.gps&&S.gpsFar)toast("You are "+fmtD(dist(S.gps,FIELD))+" from the battlefield. The dot appears once you are on the field.");
     else{startGps(false);toast("Looking for your position…")}});
   $("#tourList").addEventListener("click",function(e){var b=e.target.closest("button.open");if(b)openSheet(b.dataset.id)});
+  $("#tourNow").addEventListener("click",function(e){var b=e.target.closest("button.open");if(b)openSheet(b.dataset.id)});
+  $("#sheetNav").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;
+    if(b.dataset.act==="next"){S.done[b.dataset.cur]=1;store.set("done",S.done);if(S.tab==="tour")renderTour()}
+    if(!S.useGps)setHere(b.dataset.id);openSheet(b.dataset.id)});
+  function hideStart(){$("#start").classList.add("off")}
+  $("#goCam").addEventListener("click",function(){hideStart();setTab("look");if(!S.live)goLive()});
+  $("#goTour").addEventListener("click",function(){hideStart();setTab("tour")});
+  $("#goMap").addEventListener("click",function(){hideStart();setTab("map")});
+  var framed=true;try{framed=window.self!==window.top}catch(e){}
+  if(framed){$("#goCam").textContent="Look around";$("#startNote").textContent="Inside Claude the live camera is switched off, so this shows the drawn ground instead. The shared web link runs the camera."}
+  else{$("#share").hidden=false;$("#share").addEventListener("click",function(){var u=location.href.split("#")[0];
+    if(navigator.share)navigator.share({title:"Gettysburg Field Guide",text:"Point your phone at the battlefield and see what happened there.",url:u}).catch(function(){});
+    else if(navigator.clipboard)navigator.clipboard.writeText(u).then(function(){toast("Link copied. Paste it into a message.")},function(){toast(u)});else toast(u)})}
   $("#tourList").addEventListener("change",function(e){var c=e.target;if(c.type!=="checkbox")return;if(c.checked)S.done[c.dataset.id]=1;else delete S.done[c.dataset.id];store.set("done",S.done);c.closest("li").classList.toggle("done",c.checked)});
   $("#sheetClose").addEventListener("click",closeSheet);
   $("#sheetBody").addEventListener("click",function(e){var b=e.target.closest("button[data-act]");if(!b)return;var id=b.dataset.id;
