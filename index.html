@@ -862,6 +862,12 @@ ul.short b{display:block;font:600 13px var(--display);letter-spacing:.06em;text-
 #sheetNav[hidden]{display:none}
 #sheetNav .btn:last-child{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
+.pin.lin{background:var(--union);color:#fff;font-size:11px}
+:root[data-theme="dark"] .pin.lin{color:#111}
+.prose h3.sub{font-size:15px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-top:14px}
+.chips.jump{position:sticky;top:-16px;z-index:5;background:var(--paper);margin:-16px -16px 12px;padding:10px 16px;border-bottom:1px solid var(--line);max-width:none}
+#layers{padding:0 0 12px;margin:0 auto}
+
 </style>
 </head>
 <body>
@@ -910,15 +916,17 @@ ul.short b{display:block;font:600 13px var(--display);letter-spacing:.06em;text-
 
 <section class="view" id="v-tour" aria-label="Tour stops">
   <div class="scroll">
+    <div class="chips" id="layers" role="group" aria-label="Which tour"><button class="chip on" data-l="B">The battle, July 1863</button><button class="chip" data-l="L">Lincoln, November 1863</button></div>
     <div id="tourNow"></div>
-    <p class="lead">All 22 stops in driving order, following the Park Service's auto tour. Tap any stop to read it.</p>
+    <p class="lead" id="tourLead"></p>
     <ol class="tour" id="tourList"></ol>
   </div>
 </section>
 
 <section class="view" id="v-brief" aria-label="Briefing">
   <div class="scroll prose">
-    <h2>Saturday, November 14</h2>
+    <div class="chips jump" id="jump"><button class="chip" data-j="plan">Saturday</button><button class="chip" data-j="story">The battle</button><button class="chip" data-j="deep">Deep dive</button><button class="chip" data-j="books">Reading</button><button class="chip" data-j="srcs">Sources</button></div>
+    <h2 id="plan">Saturday, November 14</h2>
     <p class="note">The park opens its roads from 30 minutes before sunrise to 30 minutes after sunset. On the 14th the sun rises at <b id="sunrise">about 6:50 AM</b> and sets at <b id="sunset">about 4:50 PM</b>, so the field is open from roughly <b id="opens">6:20 AM</b> to <b id="closes">5:20 PM</b>. That gives you <b id="dayhours">10</b> hours of daylight. It is the real limit on a full tour.</p>
     <div class="tw"><table class="plan">
       <tr><th>Time</th><th>Where</th><th>Stops</th></tr>
@@ -937,7 +945,7 @@ ul.short b{display:block;font:600 13px var(--display);letter-spacing:.06em;text-
       <li>East Cavalry Field (stop A) is a 15-minute drive each way. Skip it unless you start at first light and keep to the clock.</li>
     </ul>
 
-    <h2>The campaign in one page</h2>
+    <h2 id="story">The campaign in one page</h2>
     <p>After Chancellorsville in May 1863, Lee reorganized his army into three corps under Longstreet, Ewell and A. P. Hill, Stonewall Jackson having died of his wounds, and took it north. He meant to draw the war out of Virginia for a season, feed his army on Pennsylvania's harvest, upset Union plans for the summer and, if the chance came, beat the Army of the Potomac on Northern soil.</p>
     <p>Ewell cleared the Shenandoah Valley at Second Winchester in mid-June, and by the end of the month Confederates were on the Susquehanna. Stuart took three cavalry brigades around the Union army on June 25 and was out of touch for a week. Lee did not learn that the Federals had crossed the Potomac until a scout named Harrison reported it on the night of June 28. That same day Lincoln replaced Joseph Hooker with George G. Meade.</p>
     <p>Lee ordered his scattered corps to gather east of South Mountain, near Cashtown and Gettysburg. Meade moved north on a broad front, ready to fight behind Pipe Creek in Maryland if attacked. Ten roads met at Gettysburg. On June 30 Buford's cavalry rode in from the south and found Confederates to the west.</p>
@@ -1016,7 +1024,64 @@ ul.short b{display:block;font:600 13px var(--display);letter-spacing:.06em;text-
       <li><b>Enemies shared Spangler's Spring.</b> No account from 1863 mentions it.</li>
     </ul>
 
-    <h2>Read before Saturday</h2>
+
+    <h2 id="deep">Deep dive</h2>
+    <p class="lead">Four questions a serious visitor should be able to answer: what the battle decided, who got what wrong, why New York burned ten days later, and how this ground became sacred. Where historians disagree, the disagreement is the point.</p>
+
+    <h3>1. What Gettysburg decided, and what it did not</h3>
+    <p>The popular claim is that the war turned here. The strongest scholarly objection comes from Gary Gallagher, and it rests on what people said in 1863. Reading Confederate letters, diaries and newspapers, he found that most Southerners treated Gettysburg as a costly check, not a catastrophe. Lee's army had driven the enemy on the first day, held the field on July 4, and come home with its confidence in Lee intact. The loss of Vicksburg and its 30,000 men, the same week, hurt far more. The language of a "high tide" came later, from Lost Cause writers who needed a single moment where victory slipped away, and from John Bachelder, who gave that moment a monument.</p>
+    <p>The war's own course supports him. It lasted twenty-one more months. The bloodiest campaign in the East, Grant's against Lee in 1864, was still to come. Northern morale reached its lowest point not in 1863 but in August 1864, when Lincoln wrote a private memorandum expecting to lose the election. Gallagher has argued that if one turning point must be named it is the Seven Days in 1862, which put Lee in command and pushed the Union toward emancipation.</p>
+    <p>None of that makes the battle minor. Four things changed.</p>
+    <ul>
+      <li><b>Lee's army lost its offensive power.</b> He lost roughly a third of his men and a third of his generals. He never again undertook a strategic offensive on this scale, and within weeks he offered Jefferson Davis his resignation.</li>
+      <li><b>The political gamble failed.</b> Lee went north partly to strengthen the peace wing of the Democratic party, whose influence was near its peak in June 1863. Gallagher's own judgment is that a Union defeat on Northern soil would have badly damaged Lincoln and fed that movement. Instead the Confederate vice-president, sent toward Washington that week to open talks, was turned back.</li>
+      <li><b>It arrived with other victories.</b> Vicksburg fell on July 4 and Port Hudson five days later, opening the Mississippi, while Rosecrans manoeuvred Bragg out of Middle Tennessee. James McPherson's reading is that the war had several turning points, each of which could have gone the other way, and that July 1863 was one of them.</li>
+      <li><b>It ended the Army of the Potomac's habit of losing to Lee.</b> For the first time that army beat him in a stand-up fight, under a commander three days in the job.</li>
+    </ul>
+    <p>The battle's largest significance was added afterwards, by Lincoln. Without the Address, Gettysburg would be remembered roughly as Antietam is. With it, the battle became the place where the purpose of the war was stated. That is a fact about memory, and it is the subject of section 4.</p>
+
+    <h3>2. The mistakes</h3>
+    <p>Every one of these is contested. Each entry gives the charge and the best answer to it.</p>
+    <h3 class="sub">Confederate</h3>
+    <ul>
+      <li><b>Stuart's ride.</b> Lee's orders of June 22 and 23 let Stuart pass around the Union army if he could do so without hindrance. He took his three best brigades, was cut off for a week, and left Lee to find the enemy by collision. The answer: the orders were Lee's and they were loose, and Lee kept other cavalry with him that he used badly. Lee's report still says the absence of cavalry "much embarrassed" the campaign.</li>
+      <li><b>Bringing on the battle.</b> Heth and Hill sent two divisions down the pike on July 1 against Lee's wish to avoid a general engagement. It became a victory only because Ewell arrived on the Union flank by chance of the roads.</li>
+      <li><b>Ewell and Cemetery Hill.</b> The charge is that he let the Union keep the key position. Gallagher's answer is that Lee's order was discretionary, Ewell's men were spent and disordered, Hill offered no help, and the hill was already held by a fresh division and forty guns. The comparison with Jackson is a postwar invention.</li>
+      <li><b>Lee's decision to attack on July 2.</b> Longstreet wanted to move around the Union left and force Meade to attack. Coddington and Sears think Lee underestimated his enemy and overestimated his own army. Gallagher answers that Lee could not feed a stationary army in hostile country, did not know where all of Meade's corps were, and had every reason, after Chancellorsville and July 1, to trust the attack.</li>
+      <li><b>How July 2 was run.</b> The attack began in late afternoon after a countermarch. It was meant to roll north by brigades, and it stalled in Hill's corps, where two of Anderson's brigades never advanced. Ewell struck hours late. Lee commanded a five-mile outer line through a handful of staff officers and by suggestion. Most historians now put this failure of coordination above any one general's fault.</li>
+      <li><b>July 3.</b> Lee attacked the centre of a prepared position across open ground, with a division wrecked two days earlier in the assault's left wing, supports that never moved, and artillery that ran short of ammunition after the reserve train was moved away. Earl Hess calls the plan feasible but dependent on a chain of things going right. Almost none did.</li>
+      <li><b>The campaign itself.</b> Longstreet and others had urged sending troops west to save Vicksburg instead. Gallagher defends Lee's choice: Virginia was where Confederate morale lived, and a victory there counted for more than one anywhere else.</li>
+    </ul>
+    <h3 class="sub">Union</h3>
+    <ul>
+      <li><b>Sickles.</b> His unauthorized advance to the Peach Orchard cost his corps about 4,000 men and uncovered Little Round Top. His defence, that it broke up Longstreet's attack, convinces few.</li>
+      <li><b>The first day's ground.</b> Howard put two weak divisions on an open plain north of town and Barlow pushed forward to the knoll. Howard's reserve on Cemetery Hill redeemed it.</li>
+      <li><b>Stripping Culp's Hill.</b> On the evening of July 2 Meade pulled nearly the whole XII Corps off his right to save his left. One brigade and its breastworks kept the hill. It was the closest he came to losing the battle by his own act.</li>
+      <li><b>The cavalry.</b> Pleasonton sent Buford's division away on the morning of July 2 and did not replace it, so nobody was watching the Union left when Longstreet marched on it. On July 3 Kilpatrick ordered a hopeless mounted charge that killed Elon Farnsworth.</li>
+      <li><b>The pursuit.</b> Lee was pinned against a flooded Potomac at Williamsport from July 7 to 13. Meade's generals voted against attacking, and Lee crossed on the night of July 13. Lincoln wrote, and did not send, a letter telling Meade, "Your golden opportunity is gone, and I am distressed immeasurably because of it." A. Wilson Greene and Kent Masterson Brown answer that Meade had lost a quarter of his army and three corps commanders, was outrunning his supplies, and faced nine miles of entrenchments that would likely have produced another Fredericksburg. Allen Guelzo is harder on him. This is the argument most worth having on the drive home.</li>
+    </ul>
+
+    <h3>3. The draft riots</h3>
+    <p>On March 3, 1863 Congress passed the Enrollment Act, the first federal conscription in American history. Men aged 20 to 45 were liable. A drafted man could hire a substitute or pay $300, about a labourer's yearly wage, to be excused. In New York the first names were drawn on Saturday, July 11, a week after the battle, and printed in the Sunday papers beside the casualty lists from Gettysburg.</p>
+    <p>On Monday, July 13 a crowd burned the draft office on Third Avenue. Over four days the riot widened from the draft to the Republican establishment and then, with the greatest ferocity, to Black New Yorkers. The Colored Orphan Asylum on Fifth Avenue was burned, its children barely got out, and at least eleven Black men were lynched. Adrian Cook's count of the dead, 105, is the figure most historians use; others accept at least 119; contemporaries believed far more. Most of those killed were rioters shot by police and soldiers. In the following two years about a fifth of the city's Black population left.</p>
+    <p>The connection to Gettysburg is direct in three ways.</p>
+    <ul>
+      <li><b>Lee's invasion emptied the city.</b> In June, New York had sent most of its militia, some 16,000 men from the state, to Pennsylvania for the emergency. When the riot began the city had its police and a few hundred soldiers.</li>
+      <li><b>Gettysburg's soldiers ended it.</b> Militia regiments returning from Pennsylvania and regiments detached from the Army of the Potomac reached the city on July 15 and 16 and put the riot down with rifle fire and artillery. This was the same week Meade was being pressed to destroy Lee at Williamsport. The draft resumed in August under the guard of thousands of his troops.</li>
+      <li><b>It shows what the victory had not settled.</b> Ten days after Pickett's Charge, the largest city in the Union was in insurrection against the war's demands and against emancipation. This is the best single piece of evidence for Gallagher's argument that nobody in July 1863 thought the war was decided.</li>
+    </ul>
+    <p>Iver Bernstein's study reads the riot as a crisis over who would bear the cost of a war that had become a war for Black freedom: Irish and German labourers who competed with Black workers on the docks, a Democratic machine that told them the draft was unconstitutional, and a $300 clause that made it, in the phrase of the time, a rich man's war and a poor man's fight. Leslie Harris places it in a longer history of violence against Black New Yorkers.</p>
+    <p>Set the dates side by side. July 3, the repulse at the Angle. July 13 to 16, the riots. July 18, the 54th Massachusetts, a Black regiment, storms Fort Wagner. In August Lincoln drew the contrast himself in a public letter, between Black men who had fought for the Union and white men who had worked to hinder it. When he came here in November to say that the nation was dedicated to the proposition that all men are created equal, and to ask whether government of the people could endure, he was not speaking in the abstract. The question had been put in the streets of New York four months before.</p>
+
+    <h3>4. How the ground was consecrated</h3>
+    <p><b>The dead.</b> The armies left about 7,000 dead in shallow graves and unburied in the fields, several thousand dead horses, and more than 20,000 wounded in a town of 2,400. Rain opened the graves. Families arrived to dig for their sons. Governor Andrew Curtin appointed the attorney David Wills as Pennsylvania's agent. The idea of one cemetery for all the Union dead came from Theodore Dimon, a New York surgeon. Wills took it up, outmanoeuvred a rival plan from David McConaughy of Evergreen Cemetery, and bought seventeen acres on Cemetery Hill for $2,475.87, with the Northern states sharing the cost.</p>
+    <p><b>The design.</b> William Saunders of the Department of Agriculture drew a half circle of graves around a central monument. Each state had a section. Within it, officers and privates lay together under identical low stones. Saunders wrote that he wanted simple grandeur and no distinctions. Drew Gilpin Faust has shown how new this was: before this war, governments did not take responsibility for naming and burying every soldier.</p>
+    <p><b>The labour.</b> The contract went to F. W. Biesecker at $1.59 a body. Samuel Weaver supervised every exhumation and searched the pockets for names. The digging and carrying was done by Basil Biggs and a crew of eight or ten Black labourers. They began on October 27, 1863 and finished on March 18, 1864, having moved 3,512 men, 979 of them unknown. Confederate dead were left where they lay until Southern women's memorial associations paid to bring some 3,300 home in the early 1870s.</p>
+    <p><b>The ceremony.</b> Wills invited Edward Everett, the country's most admired orator, in September, and moved the date to November 19 to give him time. Lincoln was formally invited on November 2. Everett spoke for two hours on the battle and the war's causes. Lincoln spoke for two or three minutes. He named no general, no regiment, neither army, not the town, and not slavery. He dated the nation from 1776 and the Declaration, not from the Constitution, and he defined the war as a test of whether a nation built on equality could survive. Garry Wills argues that with those sentences he changed how Americans read their founding. Gabor Boritt and Martin Johnson add two cautions: the speech was applauded and widely printed at the time, but split on party lines, and its standing as scripture grew slowly, over the following fifty years. Everett wrote to Lincoln the next day that he wished he had come as near the central idea in two hours as Lincoln had in two minutes.</p>
+    <p><b>The second consecration.</b> What happened next is the part most visitors miss. McConaughy's Gettysburg Battlefield Memorial Association began buying the Union lines in 1864. Veterans covered them with regimental monuments in the 1880s. Congress made the field a national military park in 1895 and began marking the Confederate positions too. At the fiftieth anniversary in 1913 more than 50,000 veterans of both armies camped here and shook hands across the wall at the Angle. The first Confederate state monument, Virginia's, went up in 1917.</p>
+    <p>David Blight's <i>Race and Reunion</i> is the essential reading on this. The field was consecrated a second time as a shrine to the shared courage of white soldiers on both sides, and that reconciliation was bought by leaving out the cause of the war and the people it freed. Lincoln's consecration was about equality. The veterans' was about valour. The monuments you will walk among on Saturday belong almost entirely to the second. The Lincoln tour's last stop, the cemetery where the town's Black veterans had to be buried, is where the two meet.</p>
+
+    <h2 id="books">Read before Saturday</h2>
     <h3>If you have one evening</h3>
     <ol>
       <li>The Park Service's <a href="https://home.nps.gov/gett/learn/photosmultimedia/virtualtour.htm" target="_blank" rel="noopener">virtual tour</a>, built on the same 16 stops you will drive.</li>
@@ -1052,7 +1117,7 @@ ul.short b{display:block;font:600 13px var(--display);letter-spacing:.06em;text-
     <h3>Read knowing what it is</h3>
     <p>Michael Shaara's novel <i>The Killer Angels</i> (1974) and the film made from it are fine storytelling built largely on Longstreet's and Chamberlain's own memoirs. They are the source of much of what visitors expect to see. Enjoy them, and check them against the reports.</p>
 
-    <h2>Sources</h2>
+    <h2 id="srcs">Sources</h2>
     <p class="lead">Everything in this guide comes from the record made by participants or from the scholars and institutions below. Where they disagree, the stop page says so.</p>
     <h3>Written by participants</h3>
     <ul>
@@ -1092,6 +1157,12 @@ ul.short b{display:block;font:600 13px var(--display);letter-spacing:.06em;text-
       <li>Margaret S. Creighton, <i>The Colors of Courage: Gettysburg's Forgotten History</i> (2005).</li>
       <li>Garry Wills, <i>Lincoln at Gettysburg: The Words That Remade America</i> (1992).</li>
       <li>John W. Busey and David G. Martin, <i>Regimental Strengths and Losses at Gettysburg</i> (4th ed., 2005).</li>
+      <li>James M. McPherson, <i>Battle Cry of Freedom</i> (1988). Allen C. Guelzo, <i>Gettysburg: The Last Invasion</i> (2013). Kent Masterson Brown, <i>Retreat from Gettysburg</i> (2005).</li>
+      <li>Gary W. Gallagher, <i>The Union War</i> (Harvard, 2011).</li>
+      <li>Iver Bernstein, <i>The New York City Draft Riots</i> (Oxford, 1990). Adrian Cook, <i>The Armies of the Streets</i> (1974). Leslie M. Harris, <i>In the Shadow of Slavery: African Americans in New York City, 1626 to 1863</i> (2003).</li>
+      <li>Gabor Boritt, <i>The Gettysburg Gospel</i> (2006). Martin P. Johnson, <i>Writing the Gettysburg Address</i> (2013).</li>
+      <li>Drew Gilpin Faust, <i>This Republic of Suffering</i> (2008). David W. Blight, <i>Race and Reunion: The Civil War in American Memory</i> (2001).</li>
+      <li>William A. Frassanito, <i>Early Photography at Gettysburg</i> (1995). Christopher Oakley, <a href="https://www.friendsofthelincolncollection.org/lincoln-lore/placing-the-platform-using-3d-technology-to-pinpoint-lincoln-at-gettysburg/" target="_blank" rel="noopener">"Placing the Platform,"</a> <i>Lincoln Lore</i> (2022).</li>
     </ul>
     <h3>Institutions</h3>
     <ul>
@@ -1387,7 +1458,7 @@ const P = [
  {to:"ech",t:`West: Gettysburg and the rear of the Union army, three and a half miles away.`}],
  src:["OR vol. 27, pt. 1: reports of Gregg, Custer; pt. 2: Stuart","Wittenberg, Protecting the Flank at Gettysburg (2013)","Coddington, The Gettysburg Campaign"]},
 
-{id:"town",k:"stop",num:"B",opt:1,pri:3,n:"Lincoln Square and the Wills House",lat:39.83082,lon:-77.23060,day:[1],when:"July 1 to 4; November 18 and 19, 1863",
+{id:"town",k:"stop",num:"B",opt:1,pri:3,n:"Lincoln Square",lat:39.83072,lon:-77.23118,day:[1],when:"July 1 to 4; November 18 and 19, 1863",
  s:"Optional. The town, and where Lincoln stayed.",
  body:[`On the afternoon of July 1 thousands of retreating Union soldiers jammed these streets. Hundreds were captured in yards and alleys. Confederates held the town until July 4, and every church and public building became a hospital. Jennie Wade, 20, was killed by a stray bullet on July 3 while kneading dough in her sister's kitchen on Baltimore Street, the only civilian killed in the battle.`,
  `Lincoln arrived by train at the Carlisle Street station on the evening of November 18, 1863, and stayed with David Wills in the house on the square, where he finished the Address. For the civilian side of the battle, read Tillie Pierce, who was 15 and wrote down what she saw.`],
@@ -1500,6 +1571,72 @@ const SUM = {
 /* Height of observation towers above ground, metres. */
 const TW = {oakridge:7,warfield:23,culps:18};
 
+/* ---- Second tour layer: Lincoln at Gettysburg, November 18 and 19, 1863 ---- */
+P.push(
+{id:"station",k:"stop",layer:"L",num:"L1",pri:3,n:"The Railroad Station",lat:39.83200,lon:-77.23077,day:[],when:"November 18, 1863, early evening",
+ s:"Lincoln arrives by train.",
+ body:[`Lincoln left Washington at noon on a special train, changed lines at Baltimore and Hanover Junction, and reached this station around dusk. Coffins for the reburials were stacked on the platform when he stepped down. In July the building had been a hospital.`,
+ `With him came Secretary of State Seward, two other cabinet members, his secretaries John Nicolay and John Hay, and his friend Ward Hill Lamon, who was to marshal the next day's procession. The story that he wrote the speech on an envelope during the ride is a legend. Nicolay, who was on the train, said he wrote nothing on it, and the surviving drafts show a text begun in Washington.`,
+ `He left from here about twenty-four hours later, already feeling ill. Back in Washington he was diagnosed with varioloid, a mild form of smallpox.`],
+ views:[{to:"wills",t:`South, one block: the square and the Wills house. Lincoln was walked there through a crowd.`},{to:"platform",t:`South, a mile off: Cemetery Hill, where he would speak the next afternoon.`}],
+ src:["Nicolay, \"Lincoln's Gettysburg Address,\" Century Magazine (1894)","Johnson, Writing the Gettysburg Address (2013)","Boritt, The Gettysburg Gospel (2006)"]},
+{id:"wills",k:"stop",layer:"L",num:"L2",pri:3,n:"The Wills House",lat:39.83082,lon:-77.23060,day:[],when:"Night of November 18",
+ s:"Where Lincoln slept and finished the speech.",
+ body:[`David Wills, a 32-year-old attorney, had organized the cemetery and the ceremony. His letter of November 2 asked the President to set the ground apart with "a few appropriate remarks." The main oration had been given to Edward Everett weeks earlier, and the date moved to November 19 to suit him. Both men were Wills's guests that night.`,
+ `A crowd gathered in the square and called for a speech. Lincoln came to the door and declined, saying that in his position it was important not to say foolish things. He went up to the second-floor bedroom facing the square and worked on the text that night and again after breakfast, when Nicolay joined him.`],
+ debate:`How much did he write here? Johnson's close study of the manuscripts argues that the first page was written in Washington and the ending reworked in this house, and that Lincoln changed the wording again as he spoke. "Under God" appears in the reporters' transcripts and the later copies, and in neither of the two earliest drafts.`,
+ views:[{to:"station",t:`North: the station he arrived at.`},{to:"church",t:`South down Baltimore Street: the route of the procession, and the Presbyterian Church he walked to that afternoon.`}],
+ src:["David Wills to Lincoln, November 2, 1863 (Library of Congress)","Johnson, Writing the Gettysburg Address","National Park Service, David Wills House"]},
+{id:"church",k:"stop",layer:"L",num:"L3",pri:3,n:"Baltimore Street and the Presbyterian Church",lat:39.82838,lon:-77.23057,day:[],when:"November 19, morning and late afternoon",
+ s:"The procession route, and Lincoln with John Burns.",
+ body:[`The procession formed in the square about 10 am with Lamon as marshal. Lincoln rode a horse. It went down Baltimore Street past this corner, turned onto the Emmitsburg Road and then the Taneytown Road, and entered the cemetery from the west, about a mile in all. Four and a half months earlier the same street had carried the Union retreat, and the Confederate line had run along Middle Street, one block north of here.`,
+ `After the ceremony Lincoln asked to meet John Burns, the cobbler of nearly seventy who had picked up his musket on July 1, fought beside the Iron Brigade and been wounded. The two walked here together to hear a speech by Charles Anderson of Ohio. The church has since been rebuilt, and the pew they shared is kept inside.`],
+ views:[{to:"wills",t:`North: the square and the Wills house, where the procession started.`},{to:"platform",t:`South, up the street: Cemetery Hill. The procession passed out of sight to the right before climbing it.`}],
+ src:["Washington Chronicle, November 20 and 21, 1863","Boritt, The Gettysburg Gospel"]},
+{id:"speechmem",k:"stop",layer:"L",num:"L4",pri:3,n:"Lincoln Speech Memorial",lat:39.81756,lon:-77.23185,day:[],when:"Dedicated 1912",
+ s:"A monument to the speech, not the place it was given.",
+ body:[`This memorial, with Henry Bush-Brown's bust of Lincoln, was put up in 1912. It carries the text of the Address and of Wills's invitation. It is one of very few monuments anywhere to a speech rather than to a person or an event.`,
+ `It does not mark where Lincoln stood. That is about 300 yards north, at the crown of the hill. The procession came in on this side of the cemetery, from the Taneytown Road.`],
+ views:[{to:"platform",t:`North, uphill: the crown of Cemetery Hill and the platform site, about 300 yards away.`},{to:"monsite",t:`North: the Soldiers' National Monument at the centre of the graves.`}],
+ src:["National Park Service, Gettysburg National Cemetery"]},
+{id:"monsite",k:"stop",layer:"L",num:"L5",pri:3,n:"Soldiers' National Monument",lat:39.81952,lon:-77.23120,day:[],when:"Dedicated July 1, 1869",
+ s:"The centre of the graves. Long taken, wrongly, for the spot.",
+ body:[`William Saunders laid the graves out in a half circle around this point, state by state, with officers and privates side by side and every stone the same. He wanted no state and no rank to stand above another. That is the same proposition the speech opens with, set out in granite. On dedication day a flagpole stood here, only about 1,250 of the dead had been moved, and the ground was raw earth. The work went on until March 1864.`,
+ `The monument was dedicated on July 1, 1869, with Meade among the speakers. For a century it was accepted as the place where Lincoln spoke, and the Kentucky marker beside it still says so. The photographs show otherwise: the platform stood some 50 yards east of here.`],
+ views:[{to:"platform",t:`East, toward the iron fence: the platform stood there, on the crown of the hill.`},{to:"angle",t:`South-west: Cemetery Ridge and the Angle. Many of the men buried around you fell there.`}],
+ src:["Saunders, \"Remarks on the Design for the Soldiers' National Cemetery\" (1864)","Frassanito, Early Photography at Gettysburg (1995)"]},
+{id:"platform",k:"stop",layer:"L",num:"L6",star:1,pri:3,n:"Where Lincoln Stood",lat:39.81998,lon:-77.23067,day:[],when:"November 19, 1863, about 2 pm",
+ s:"The platform site, at the iron fence.",
+ body:[`Stand at the iron fence where the Park Service marker is. You are within a few paces of the place. There have been three scholarly placements of the platform, all at the crown of this hill, and none at the monument.`,
+ `In 1978 the park historian Kathleen Georg Harrison put it well inside Evergreen Cemetery, near the Brown family vault. In 1995 William Frassanito used the photographs to place it a few yards beyond this fence, on ground now holding the graves of George Kitzmiller, Israel Yount and John Koch, and that became the accepted answer. In 2022 Christopher Oakley's team rebuilt the scene in three dimensions from six photographs and concluded that the platform was larger than anyone had thought, shaped like a trapezoid, and lay across the line where this fence now runs. On that model the back rows were in Evergreen and the speakers at the front stood on the National Cemetery side, about 20 yards from Frassanito's spot.`,
+ `The platform faced roughly north-west. In front of Lincoln some 15,000 people stood on bare ground among the new graves, with a flagpole to his left front where the monument is now. Everett spoke for two hours from memory. A hymn followed. Then Lincoln rose, spoke about 270 words in two or three minutes, and sat down. No photograph shows him speaking; the one clear image of him was taken about noon, as he arrived.`],
+ debate:`The Park Service's marker here, installed in 2020, says only that the site is believed to be in Evergreen Cemetery on the other side of the fence. Oakley's reconstruction has been well received, and it puts Lincoln himself on this side. The honest answer is that he stood within a few yards of this fence, and the evidence cannot yet say which side.`,
+ views:[{b:300,name:"The way Lincoln faced",t:`Roughly north-west, on Oakley's reconstruction. The crowd stood on this slope among the new graves. A flagpole stood to his left front, where the monument is now.`},{to:"monsite",t:`The Soldiers' National Monument, about 50 yards off. For a century it was taken for this spot.`},{to:"evergreen",t:`East, through the fence: Evergreen Cemetery. Frassanito's site is a few yards in, near the flag at Jennie Wade's grave.`},{to:"gatehouse",t:`North-east: the Evergreen gatehouse. One of the dedication photographs was taken from its upper window.`},{to:"speechmem",t:`South: the Lincoln Speech Memorial, 300 yards down the slope, often mistaken for this spot.`}],
+ src:["Frassanito, Early Photography at Gettysburg (1995)","Oakley, \"Placing the Platform,\" Lincoln Lore (2022)","National Park Service wayside, Gettysburg National Cemetery (2020)"] },
+{id:"evergreen",k:"stop",layer:"L",num:"L7",pri:3,n:"Evergreen Cemetery",lat:39.81970,lon:-77.23039,day:[],when:"The other side of the fence",
+ s:"The town cemetery behind the platform.",
+ body:[`Evergreen is the town's own burying ground, opened in 1854, and it gave Cemetery Hill its name. Union batteries stood among its stones in July. The back of the speakers' platform, and on Frassanito's reading all of it, stood here.`,
+ `The flag flies over the grave of Jennie Wade, the one civilian killed in the battle. The fence has no gate, so to reach this side you walk round by the gatehouse on the Baltimore Pike, about five minutes.`],
+ views:[{to:"platform",t:`West, through the fence: the National Cemetery and the Park Service marker for the platform.`},{to:"gatehouse",t:`North: the gatehouse on the Baltimore Pike, the way in and out.`}],
+ src:["Frassanito, Early Photography at Gettysburg","Evergreen Cemetery Association"]},
+{id:"lincolncem",k:"stop",layer:"L",num:"L8",opt:1,pri:3,n:"Lincoln Cemetery",lat:39.82610,lon:-77.23554,day:[],when:"Founded 1867",
+ s:"Optional. Where the town's Black veterans are buried.",
+ body:[`Gettysburg's Black community founded this cemetery in 1867. About thirty men who served in the United States Colored Troops lie here. The Soldiers' National Cemetery, a short walk away, was in practice closed to them.`,
+ `Basil Biggs is buried here too. He and his crew of Black labourers did the work of lifting the Union dead from the fields and carrying them to the new cemetery in the winter of 1863 and 1864. The ground Lincoln dedicated to a new birth of freedom was filled by men who could not be buried in it.`],
+ views:[{to:"platform",t:`South-east: Cemetery Hill and the National Cemetery, half a mile away.`}],
+ src:["Lincoln Cemetery Project Association","Creighton, The Colors of Courage (2005)"]}
+);
+Object.assign(SUM,{
+ station:["Lincoln arrives here by train at dusk on November 18, with coffins for the reburials stacked on the platform.","Lincoln, Seward, his secretaries Nicolay and Hay, and Ward Hill Lamon.","He did not write the speech on the train. That story is a legend."],
+ wills:["Lincoln spends the night here as the guest of David Wills and finishes the speech in the upstairs bedroom.","Wills, who organized the cemetery, and Edward Everett, the day's main speaker.","Wills had asked him only for \"a few appropriate remarks.\""],
+ church:["The procession to the cemetery passes here on the morning of November 19. That afternoon Lincoln walks here with John Burns.","Lincoln on horseback, and Burns, the old cobbler who fought on July 1.","The same street carried the Union retreat in July."],
+ speechmem:["A 1912 memorial to the Address itself.","Sculptor Henry Bush-Brown.","It is often taken for the place Lincoln spoke. That is 300 yards north."],
+ monsite:["The centre of the half circle of graves, marked by the monument since 1869.","William Saunders, who designed the cemetery so that no state or rank stood above another.","For a century this was wrongly accepted as the spot where Lincoln stood."],
+ platform:["The speakers' platform stood here, on the crown of the hill at the line of the iron fence.","Lincoln, Everett and about 15,000 listeners.","Every modern study puts it at this fence or just beyond it. You are standing as close as the evidence allows."],
+ evergreen:["The town cemetery on the other side of the fence, where the back of the platform stood.","Jennie Wade is buried here under the flag.","The older studies put Lincoln on this side. The newest puts him just across the fence."],
+ lincolncem:["The cemetery of Gettysburg's Black community, founded in 1867.","About thirty Black Civil War veterans, and Basil Biggs, who reburied the Union dead.","They were kept out of the cemetery Lincoln dedicated."]
+});
+
 (function(){
 "use strict";
 var $=function(s){return document.querySelector(s)};
@@ -1603,7 +1740,7 @@ function texCanvas(){
   (ph.u||[]).forEach(function(l){line(l,U,8)});(ph.ud||[]).forEach(function(l){line(l,U,6,[4,12])});(ph.c||[]).forEach(function(l){line(l,C,8)});
   (ph.ca||[]).forEach(function(l){line(l,C,5);head(l,C)});(ph.ua||[]).forEach(function(l){line(l,U,5,[8,10]);head(l,U)});
   P.forEach(function(p){if(p.k!=="stop")return;var q=px([p.lat,p.lon]);if(q[0]<0||q[0]>W||q[1]<0||q[1]>H)return;
-    g.beginPath();g.arc(q[0],q[1],15,0,7);g.fillStyle=(!S.useGps&&p.id===S.here)?brass:ink;g.fill();g.lineWidth=2.5;g.strokeStyle=cv_card;g.stroke();
+    g.beginPath();g.arc(q[0],q[1],15,0,7);g.fillStyle=(!S.useGps&&p.id===S.here)?brass:(p.layer==="L"?U:ink);g.fill();g.lineWidth=2.5;g.strokeStyle=cv_card;g.stroke();
     g.fillStyle=cv_card;g.font="700 17px 'Barlow Condensed','Arial Narrow',Arial,sans-serif";g.textAlign="center";g.textBaseline="middle";g.fillText(p.num,q[0],q[1]+1)});
   (ph.tx||[]).forEach(function(t){text(t.at,t.t,t.c==="u"?U:C,19,true)});
   return can;
@@ -1676,7 +1813,9 @@ var store={get:function(k,d){try{var v=localStorage.getItem("gb."+k);return v==n
 var S={tab:store.get("tab","look"),here:store.get("here","angle"),done:store.get("done",{}),phase:store.get("phase","d1a"),
        gps:null,gpsFar:false,useGps:false,watch:null,
        heading:270,raw:null,offset:0,sensor:false,absSeen:false,
-       live:false,cam:false,pic:false,stream:null,fov:60,m3:false};
+       live:false,cam:false,pic:false,stream:null,fov:60,m3:false,layer:store.get("layer","B")};
+function layerOf(p){return p.layer||"B"}
+function tourOf(l){return STOPS.filter(function(p){return layerOf(p)===l})}
 if(!byId[S.here]||byId[S.here].k!=="stop")S.here="angle";
 if(!PH[S.phase])S.phase="d1a";
 if(["map","look","tour","brief"].indexOf(S.tab)<0)S.tab="look";
@@ -1703,7 +1842,7 @@ function setTab(t){
 function openSheet(id){
   var p=byId[id],pos=curPos(),h="";
   $("#sheetTitle").textContent=p.n;
-  $("#sheetWhen").textContent=(p.k==="stop"?(p.num==="VC"?"Start":"Stop "+p.num)+(p.nps?" · NPS tour stop "+p.nps:"")+" · ":"")+(p.when||"Landmark");
+  $("#sheetWhen").textContent=(p.k==="stop"?(p.layer==="L"?"Lincoln tour, stop "+p.num.slice(1):p.num==="VC"?"Start":"Stop "+p.num)+(p.nps?" · NPS tour stop "+p.nps:"")+" · ":"")+(p.when||"Landmark");
   if(SUM[p.id]){h+='<ul class="short">';["What","Who","Why it matters"].forEach(function(k,i){h+="<li><b>"+k+"</b>"+esc(SUM[p.id][i])+"</li>"});h+="</ul>"}
   else h+="<p>"+esc(p.s)+"</p>";
   h+='<div class="acts">';
@@ -1721,9 +1860,9 @@ function openSheet(id){
   if(p.src){h+='<details><summary>Sources</summary><ul class="src">';p.src.forEach(function(s){h+="<li>"+esc(s)+"</li>"});h+="</ul></details>"}
   if(p.k!=="stop"||S.useGps)h+='<p class="lead">'+fmtD(dist(pos,p))+" "+pt(brg(pos,p))+" of "+(S.useGps?"you":esc(byId[S.here].n))+".</p>";
   var body=$("#sheetBody");body.innerHTML=h;body.scrollTop=0;
-  var nav=$("#sheetNav"),i=STOPS.indexOf(p),nh="";
-  if(i>=0){if(i>0)nh+='<button class="btn ghost" data-act="go" data-id="'+STOPS[i-1].id+'">\u2190 Back</button>';
-    if(i<STOPS.length-1)nh+='<button class="btn" data-act="next" data-cur="'+p.id+'" data-id="'+STOPS[i+1].id+'">Next: '+esc(STOPS[i+1].n)+' \u2192</button>'}
+  var nav=$("#sheetNav"),TL=tourOf(layerOf(p)),i=p.k==="stop"?TL.indexOf(p):-1,nh="";
+  if(i>=0){if(i>0)nh+='<button class="btn ghost" data-act="go" data-id="'+TL[i-1].id+'">\u2190 Back</button>';
+    if(i<TL.length-1)nh+='<button class="btn" data-act="next" data-cur="'+p.id+'" data-id="'+TL[i+1].id+'">Next: '+esc(TL[i+1].n)+' \u2192</button>'}
   nav.innerHTML=nh;nav.hidden=!nh;
   $("#sheet").classList.add("on");
 }
@@ -1738,15 +1877,17 @@ function setHere(id,keepGps){
 
 /* ---------- tour list ---------- */
 function renderTour(){
-  var pos=curPos(),h="";
-  STOPS.forEach(function(p){
+  var pos=curPos(),h="",TL=tourOf(S.layer);
+  document.querySelectorAll("#layers .chip").forEach(function(c){c.classList.toggle("on",c.dataset.l===S.layer)});
+  $("#tourLead").textContent=S.layer==="L"?"Lincoln's 24 hours in Gettysburg, in the order he lived them. Stops L1 to L3 are in town; L4 to L7 are a ten-minute walk inside the cemetery.":"All 22 stops in driving order, following the Park Service's auto tour. Tap any stop to read it.";
+  TL.forEach(function(p){
     var tags=(p.star?'<span class="tag star">Must see</span>':"")+(p.opt?'<span class="tag">Optional</span>':"")+(p.nps?'<span class="tag">NPS '+p.nps+"</span>":"")+
       (S.useGps?'<span class="tag">'+fmtD(dist(pos,p))+"</span>":"");
     h+='<li class="'+(p.opt?"opt ":"")+(S.done[p.id]?"done":"")+'"><span class="num">'+p.num+'</span><button class="open" data-id="'+p.id+'"><h3>'+esc(p.n)+"</h3><p>"+tags+esc(p.when)+"</p><p>"+esc(p.s)+
       '</p></button><input type="checkbox" id="done-'+p.id+'" data-id="'+p.id+'" aria-label="Visited '+esc(p.n)+'"'+(S.done[p.id]?" checked":"")+"></li>";
   });
   $("#tourList").innerHTML=h;
-  var main=STOPS.filter(function(p){return !p.opt}),nx=null,k=0;for(var q=0;q<main.length;q++){if(!S.done[main[q].id]){nx=main[q];k=q;break}}
+  var main=TL.filter(function(p){return !p.opt}),nx=null,k=0;for(var q=0;q<main.length;q++){if(!S.done[main[q].id]){nx=main[q];k=q;break}}
   $("#tourNow").innerHTML=nx?'<div class="next"><div class="when">'+(k===0?"Start here":"Next stop")+" · "+(k+1)+" of "+main.length+(S.useGps?" · "+fmtD(dist(pos,nx))+" away":"")+"</div><h2>"+esc(nx.n)+"</h2><p>"+esc(SUM[nx.id][0])+
     '</p><div class="acts"><button class="btn open" data-id="'+nx.id+'">Open this stop</button><a class="btn ghost" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination='+nx.lat+","+nx.lon+'">Drive there</a></div></div>':
     '<div class="next"><h2>Tour complete</h2><p>You have seen every stop. The optional stops and the reading list are still here.</p></div>';
@@ -1803,7 +1944,7 @@ function initMap(){
     tiles.addTo(map);
   }catch(e){}
   P.forEach(function(p){
-    var stop=p.k==="stop",html=stop?'<div class="pin'+(p.opt?" opt":"")+'" style="width:28px;height:28px">'+p.num+"<em>"+esc(p.n)+"</em></div>":'<div class="dot" style="width:14px;height:14px"></div>';
+    var stop=p.k==="stop",html=stop?'<div class="pin'+(p.opt?" opt":"")+(p.layer==="L"?" lin":"")+'" style="width:28px;height:28px">'+p.num+"<em>"+esc(p.n)+"</em></div>":'<div class="dot" style="width:14px;height:14px"></div>';
     var m=L.marker([p.lat,p.lon],{title:p.n,zIndexOffset:stop?600:300,icon:L.divIcon({className:"",html:html,iconSize:stop?[28,28]:[14,14],iconAnchor:stop?[14,14]:[7,7]})}).addTo(map);
     m.on("click",function(){openSheet(p.id)});
     if(stop){var el=m.getElement();if(el)pinEls[p.id]=el.firstChild}
@@ -1979,6 +2120,8 @@ function init(){
     else if(S.gps&&S.gpsFar)toast("You are "+fmtD(dist(S.gps,FIELD))+" from the battlefield. The dot appears once you are on the field.");
     else{startGps(false);toast("Looking for your position…")}});
   $("#tourList").addEventListener("click",function(e){var b=e.target.closest("button.open");if(b)openSheet(b.dataset.id)});
+  $("#layers").addEventListener("click",function(e){var b=e.target.closest(".chip");if(!b)return;S.layer=b.dataset.l;store.set("layer",S.layer);renderTour()});
+  $("#jump").addEventListener("click",function(e){var b=e.target.closest(".chip");if(!b)return;var el=document.getElementById(b.dataset.j);if(el)el.scrollIntoView({block:"start"})});
   $("#tourNow").addEventListener("click",function(e){var b=e.target.closest("button.open");if(b)openSheet(b.dataset.id)});
   $("#sheetNav").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;
     if(b.dataset.act==="next"){S.done[b.dataset.cur]=1;store.set("done",S.done);if(S.tab==="tour")renderTour()}

@@ -1,5 +1,5 @@
 /* Offline cache for the Gettysburg field guide: the page, its libraries, fonts and any map tiles already viewed. */
-const C = "gb-v2";
+const C = "gb-v3";
 self.addEventListener("install", e => { e.waitUntil(caches.open(C).then(c => c.addAll(["./", "./index.html",
   "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js",
   "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"]).catch(() => {})).then(() => self.skipWaiting())); });
