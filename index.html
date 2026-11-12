@@ -868,6 +868,21 @@ ul.short b{display:block;font:600 13px var(--display);letter-spacing:.06em;text-
 .chips.jump{position:sticky;top:-16px;z-index:5;background:var(--paper);margin:-16px -16px 12px;padding:10px 16px;border-bottom:1px solid var(--line);max-width:none}
 #layers{padding:0 0 12px;margin:0 auto}
 
+.gal{display:flex;flex-direction:column;gap:14px;margin:0 auto 14px}
+.gal figure,figure.situ{margin:0}
+.gal img{width:100%;height:auto;display:block;border-radius:8px;background:var(--field);cursor:zoom-in}
+figure.situ{margin:0 auto 14px}
+#situBox canvas{width:100%;height:auto;display:block;border-radius:8px;border:1px solid var(--line)}
+figcaption{font-size:14px;line-height:1.35;color:var(--muted);margin-top:5px}
+figcaption b{font:600 13px var(--display);letter-spacing:.05em;text-transform:uppercase;color:var(--ink);margin-right:7px}
+figcaption a{display:block;font-size:12px;color:var(--muted)}
+ol.tour button.open{display:block}
+ol.tour img.th{float:right;width:68px;height:68px;object-fit:cover;border-radius:8px;margin:0 0 4px 10px}
+.next img{width:100%;height:150px;object-fit:cover;border-radius:8px;margin:8px 0 6px;display:block}
+#zoom{position:fixed;inset:0;z-index:6000;background:rgba(0,0,0,.93);display:none;align-items:center;justify-content:center;cursor:zoom-out}
+#zoom.on{display:flex}
+#zoom img{max-width:100%;max-height:100%}
+
 </style>
 </head>
 <body>
@@ -925,7 +940,28 @@ ul.short b{display:block;font:600 13px var(--display);letter-spacing:.06em;text-
 
 <section class="view" id="v-brief" aria-label="Briefing">
   <div class="scroll prose">
-    <div class="chips jump" id="jump"><button class="chip" data-j="plan">Saturday</button><button class="chip" data-j="story">The battle</button><button class="chip" data-j="deep">Deep dive</button><button class="chip" data-j="books">Reading</button><button class="chip" data-j="srcs">Sources</button></div>
+    <div class="chips jump" id="jump"><button class="chip" data-j="before">Before you go</button><button class="chip" data-j="plan">Saturday</button><button class="chip" data-j="story">The battle</button><button class="chip" data-j="deep">Deep dive</button><button class="chip" data-j="books">Reading</button><button class="chip" data-j="srcs">Sources</button></div>
+
+    <h2 id="before">Before you go</h2>
+    <p class="lead">Ten minutes of reading that makes the day make sense: what the war was about, why this battle matters, and why people have kept coming here for a hundred and sixty years.</p>
+    <h3>The war in brief</h3>
+    <p>In 1860 the United States had 31 million people. Nearly four million of them were enslaved, in fifteen states. For a generation the country had argued over whether slavery would spread into the western territories. In November 1860 Abraham Lincoln was elected on a promise to stop that spread. Seven Southern states left the Union before he took office and formed the Confederate States of America. Their own declarations named the protection of slavery as the reason. In April 1861 Confederate guns fired on Fort Sumter, four more states joined the Confederacy, and the war began.</p>
+    <p>The North fought at first only to restore the Union. That changed on January 1, 1863, when the Emancipation Proclamation made the end of slavery a war aim and opened the army to Black soldiers. About 180,000 served.</p>
+    <p>The fighting ran in two theatres. In the West, along the great rivers, Union armies won steadily, and by mid-1863 Ulysses Grant had Vicksburg, the last Confederate stronghold on the Mississippi, under siege. In the East it went the other way. Robert E. Lee took command of the Army of Northern Virginia in June 1862 and beat one Union general after another: the Seven Days, Second Bull Run, Fredericksburg and, in May 1863, Chancellorsville. Only Antietam, in September 1862, had checked him.</p>
+    <p>So in June 1863 the North was tired. It had just passed its first draft law, and a peace movement was growing. The South was short of men and food and believed in Lee. He decided to carry the war north. By the time the war ended in April 1865, about 700,000 Americans had died in it, roughly one in fifty of the whole population.</p>
+    <h3>Why Gettysburg matters</h3>
+    <p>It was the largest battle ever fought in North America. About 165,000 men fought here for three days and some 50,000 were killed, wounded or captured. It ended Lee's last invasion of the North and cost him a third of his army. It came in the same week as the fall of Vicksburg. And four months later Lincoln came to dedicate the cemetery and, in 272 words, said what the war was for.</p>
+    <p>Whether it was the turning point of the war is a real argument, and the <b>Deep dive</b> below lays it out. The short version: the war went on for almost two more years, and people at the time did not think it was decided here. What is certain is that after Gettysburg, Lee could no longer win the war by attacking.</p>
+    <h3>Why we keep coming back</h3>
+    <ul>
+      <li><b>The ground is still here.</b> About 6,000 acres are preserved, and you can read them. The ridges, the farms and the stone walls are where they were. Few battlefields in the world let you stand on a hill and see three days of fighting laid out in front of you.</li>
+      <li><b>The soldiers marked it themselves.</b> The veterans came back and put up more than 1,300 monuments and markers, mostly on the exact spots where their regiments stood. The field is their account of what they did, in stone.</li>
+      <li><b>Lincoln made it mean something.</b> He did not describe the battle. He said the dead had given their lives so that a nation built on equality could survive, and that finishing the work was up to the living. Every generation since has come here to argue about whether it has.</li>
+      <li><b>It is where the country has worked out its memory.</b> In 1913 old soldiers of both armies shook hands across the wall at the Angle, and the speeches left slavery out. In 1963, the centennial year, the civil rights movement asked whose freedom the Address had promised. The argument over the Confederate monuments on this field is the same argument, still going.</li>
+      <li><b>It is personal.</b> Millions of Americans have an ancestor who was here, and the monuments let them find the regiment and stand where he stood.</li>
+    </ul>
+    <p>About a million people visit every year. Most come for the battle. What brings many back is the question Lincoln left open, of whether a government of the people can last.</p>
+
     <h2 id="plan">Saturday, November 14</h2>
     <p class="note">The park opens its roads from 30 minutes before sunrise to 30 minutes after sunset. On the 14th the sun rises at <b id="sunrise">about 6:50 AM</b> and sets at <b id="sunset">about 4:50 PM</b>, so the field is open from roughly <b id="opens">6:20 AM</b> to <b id="closes">5:20 PM</b>. That gives you <b id="dayhours">10</b> hours of daylight. It is the real limit on a full tour.</p>
     <div class="tw"><table class="plan">
@@ -1157,6 +1193,7 @@ ul.short b{display:block;font:600 13px var(--display);letter-spacing:.06em;text-
       <li>Margaret S. Creighton, <i>The Colors of Courage: Gettysburg's Forgotten History</i> (2005).</li>
       <li>Garry Wills, <i>Lincoln at Gettysburg: The Words That Remade America</i> (1992).</li>
       <li>John W. Busey and David G. Martin, <i>Regimental Strengths and Losses at Gettysburg</i> (4th ed., 2005).</li>
+      <li>J. David Hacker, "A Census-Based Count of the Civil War Dead," <i>Civil War History</i> (2011). Jim Weeks, <i>Gettysburg: Memory, Market, and an American Shrine</i> (2003).</li>
       <li>James M. McPherson, <i>Battle Cry of Freedom</i> (1988). Allen C. Guelzo, <i>Gettysburg: The Last Invasion</i> (2013). Kent Masterson Brown, <i>Retreat from Gettysburg</i> (2005).</li>
       <li>Gary W. Gallagher, <i>The Union War</i> (Harvard, 2011).</li>
       <li>Iver Bernstein, <i>The New York City Draft Riots</i> (Oxford, 1990). Adrian Cook, <i>The Armies of the Streets</i> (1974). Leslie M. Harris, <i>In the Shadow of Slavery: African Americans in New York City, 1626 to 1863</i> (2003).</li>
@@ -1169,6 +1206,8 @@ ul.short b{display:block;font:600 13px var(--display);letter-spacing:.06em;text-
       <li>National Park Service, Gettysburg National Military Park: <a href="https://www.nps.gov/gett/planyourvisit/conditions.htm" target="_blank" rel="noopener">hours and conditions</a>, <a href="https://home.nps.gov/gett/learn/photosmultimedia/virtualtour.htm" target="_blank" rel="noopener">virtual tour</a>, and the auto tour whose stop numbers this guide uses.</li>
       <li>American Battlefield Trust: <a href="https://www.battlefields.org/learn/civil-war/battles/battle-gettysburg-facts-summary" target="_blank" rel="noopener">battle facts</a> (forces engaged, casualties) and maps.</li>
     </ul>
+    <h3>Pictures</h3>
+    <ul><li>Every picture is public domain or Creative Commons licensed and comes from Wikimedia Commons, mostly from the Library of Congress and the National Archives. The photographer and licence are given under each one, with a link to its source page.</li><li>The map in each stop is drawn by this guide from its own data.</li></ul>
     <h3>Terrain</h3>
     <ul><li>NASA Shuttle Radar Topography Mission (SRTM), 1 arc-second elevation data, tile N39W078, from the public Terrain Tiles archive on AWS.</li></ul>
     <h3>Limits of this guide</h3>
@@ -1190,6 +1229,7 @@ ul.short b{display:block;font:600 13px var(--display);letter-spacing:.06em;text-
   <div id="sheetNav"></div>
 </div>
 <div id="toast" role="status"></div>
+<div id="zoom" role="dialog" aria-label="Picture"><img id="zoomImg" alt=""></div>
 <div id="start">
   <div class="in">
     <p class="when">July 1 to 3, 1863</p>
@@ -1198,6 +1238,7 @@ ul.short b{display:block;font:600 13px var(--display);letter-spacing:.06em;text-
     <button class="btn big" id="goCam">Open the camera</button>
     <button class="btn big ghost" id="goTour">Start the guided tour</button>
     <button class="btn big ghost" id="goMap">See the map</button>
+    <button class="btn ghost" id="goRead">New here? Read this first</button>
     <button class="btn ghost" id="share" hidden>Share with friends</button>
     <p class="fine" id="startNote">Allow camera, motion and location when your phone asks. Hold the phone upright.</p>
   </div>
@@ -1637,6 +1678,9 @@ Object.assign(SUM,{
  lincolncem:["The cemetery of Gettysburg's Black community, founded in 1867.","About thirty Black Civil War veterans, and Basil Biggs, who reburied the Union dead.","They were kept out of the cemetery Lincoln dedicated."]
 });
 
+/* Pictures: public-domain and Creative Commons images from Wikimedia Commons, credited individually. */
+const IMG={"vc": [{"f": "p-vc-1.jpg", "y": "1883", "c": "Detail of the Cyclorama: a caisson explodes during the July 3 assault. Painted by Paul Philippoteaux.", "w": 960, "h": 643, "cr": "Ron Cogswell · CC BY 2.0", "u": "https://commons.wikimedia.org/wiki/File:Caisson_Exploding_--_Gettysburg_Cyclorama_2012.jpg"}, {"f": "p-vc-2.jpg", "y": "Today", "c": "The Museum and Visitor Center.", "w": 960, "h": 539, "cr": "Concord · CC BY-SA 3.0", "u": "https://commons.wikimedia.org/wiki/File:GettysburgVisitorCenter.JPG"}], "mcph": [{"f": "p-mcph-1.jpg", "y": "1860s", "c": "McPherson's Woods, where the Iron Brigade met Archer's brigade.", "w": 960, "h": 525, "cr": "Library of Congress · Public domain", "u": "https://commons.wikimedia.org/wiki/File:The_battle-field_of_Gettysburg._McPherson%27s_woods_in_which_Archer%27s_(Confederate)_Brigade_was_captured,_view_of_the_side_towards_the_Chambersburg_pike_LCCN2012646949.jpg"}, {"f": "p-mcph-2.jpg", "y": "Today", "c": "The McPherson barn, the one farm building that survives.", "w": 960, "h": 676, "cr": "TotalGettysburg · CC BY 3.0", "u": "https://commons.wikimedia.org/wiki/File:TotalGettysburg_McPhersonFarm.jpg"}], "rrcut": [{"f": "p-rrcut-1.jpg", "y": "Today", "c": "The railroad cut through McPherson Ridge. The track was laid after the war.", "w": 960, "h": 720, "cr": "George Neat · CC BY 2.0", "u": "https://commons.wikimedia.org/wiki/File:McPherson_Ridge_railway_cut_-_33311821763.jpg"}], "peace": [{"f": "p-peace-1.jpg", "y": "1930s", "c": "The memorial on a postcard from the years after its 1938 dedication.", "w": 960, "h": 606, "cr": "Period postcard, Boston Public Library · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Eternal_Light_Peace_Memorial,_Gettysburg,_Pennsylvania_(65043).jpg"}, {"f": "p-peace-2.jpg", "y": "Today", "c": "The Eternal Light Peace Memorial on Oak Hill.", "w": 960, "h": 640, "cr": "Ruhrfisch · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Eternal_Light_Peace_Memorial,_Gettysburg_National_Military_Park.jpg"}], "oakridge": [{"f": "p-oakridge-1.jpg", "y": "1930s", "c": "The observation tower on a period postcard.", "w": 330, "h": 520, "cr": "Period postcard, Boston Public Library · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Observation_Tower_on_Oak_Ridge,_Gettysburg,_PA_(64227).jpg"}, {"f": "p-oakridge-2.jpg", "y": "Today", "c": "The stone wall and monuments along Oak Ridge.", "w": 330, "h": 220, "cr": "Muhranoff · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg,_Oak_Ridge.jpg"}], "barlow": [{"f": "p-barlow-1.jpg", "y": "About 1903", "c": "The summit of Barlow's Knoll.", "w": 330, "h": 264, "cr": "Detroit Publishing Company, Library of Congress · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Summit_of_Barlow%27s_Knoll,_Gettysburg._(cropped).jpg"}, {"f": "p-barlow-2.jpg", "y": "Today", "c": "Union guns on Barlow Knoll.", "w": 330, "h": 250, "cr": "Muhranoff · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg,_Union_artillery_at_Barlow_knoll.jpg"}], "seminary": [{"f": "p-seminary-1.jpg", "y": "1863", "c": "The Lutheran Seminary, photographed soon after the battle.", "w": 330, "h": 325, "cr": "Library of Congress · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg,_Pennsylvania._Lutheran_Theological_Seminary_LOC_cwpb.01650.jpg"}, {"f": "p-seminary-2.jpg", "y": "Today", "c": "The same building, now the Seminary Ridge Museum.", "w": 330, "h": 236, "cr": "Acroterion · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg_Seminary_PA1.jpg"}], "ncmem": [{"f": "p-ncmem-1.jpg", "y": "1865", "c": "Edwin Forbes's painting of the July 3 assault seen from the Confederate line.", "w": 330, "h": 164, "cr": "Library of Congress · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Picketts_charge_from_a_position_on_the_enemys_line_looking_toward_the_Union_lines,_Zieglers_grove_on_the_left,_clump_of_trees_on_right_-_Edwin_Forbes._LCCN2004661944.jpg"}, {"f": "p-ncmem-2.jpg", "y": "Today", "c": "The North Carolina Memorial.", "w": 330, "h": 220, "cr": "Dsdugan · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:15_23_0318_gettysburg_nc.jpg"}], "vamem": [{"f": "p-vamem-1.jpg", "y": "1917", "c": "The Virginia Memorial in the year it was dedicated.", "w": 330, "h": 440, "cr": "From a 1917 publication · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Virginia_memorial_at_gettysburg.jpg"}, {"f": "p-vamem-2.jpg", "y": "Today", "c": "The memorial and the fields the assault crossed.", "w": 330, "h": 247, "cr": "Wikimedia Commons contributor · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg_National_Military_Park_20.JPG"}], "pitzer": [{"f": "p-pitzer-1.jpg", "y": "Today", "c": "The Longstreet monument in Pitzer Woods, dedicated in 1998.", "w": 330, "h": 186, "cr": "MRNAMessenger · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Lt._General_Longstreet,_Gettysburg,_Pa.jpg"}], "warfield": [{"f": "p-warfield-1.jpg", "y": "Today", "c": "The observation tower on Warfield Ridge.", "w": 330, "h": 247, "cr": "MPSharwood · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Confederate_observation_tower,_Gettysburg_National_Military_Park.jpg"}, {"f": "p-warfield-2.jpg", "y": "Today", "c": "The view east from the tower.", "w": 330, "h": 220, "cr": "David Dugan · CC BY-SA 3.0", "u": "https://commons.wikimedia.org/wiki/File:15-23-0348,_view_east_from_longstreet_tower_-_panoramio.jpg"}], "lrt": [{"f": "p-lrt-1.jpg", "y": "July 1863", "c": "Little Round Top, photographed days after the fighting.", "w": 330, "h": 257, "cr": "Unknown photographer · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Little_Round_Top,_Gettysburg,_July,_1863_-_DPLA_-_fe6eac55a2b2f691820bdb7bec452c56.jpg"}, {"f": "p-lrt-2.jpg", "y": "After 1865", "c": "Edwin Forbes's painting of the view from Little Round Top.", "w": 330, "h": 155, "cr": "Edwin Forbes, Library of Congress · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Little_Round_Top_view_Edwin_Forbes.jpg"}, {"f": "p-lrt-3.jpg", "y": "Today", "c": "Warren's statue on the summit.", "w": 330, "h": 221, "cr": "Ron Cogswell · CC BY 2.0", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg_National_Military_Park_2012_-_Union_General_Gouverneur_Warren_on_Little_Round_Top.jpg"}], "den": [{"f": "p-den-1.jpg", "y": "1863", "c": "Edwin Forbes's view of Little Round Top and Devil's Den.", "w": 330, "h": 239, "cr": "Library of Congress · Public domain", "u": "https://commons.wikimedia.org/wiki/File:The_battle_of_Gettysburg._View_of_Little_Round_Top_and_the_Devil%27s_Den,_held_by_the_Fifth_Corps_LCCN2004661443.jpg"}, {"f": "p-den-2.jpg", "y": "1909", "c": "Devil's Den in 1909.", "w": 330, "h": 113, "cr": "Unknown photographer · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Devil%27s_Den_Gettysburg_1909.jpg"}, {"f": "p-den-3.jpg", "y": "Today", "c": "Devil's Den seen from Little Round Top.", "w": 330, "h": 220, "cr": "Northern-Virginia-Photographer · CC0", "u": "https://commons.wikimedia.org/wiki/File:View_of_Devil%27s_Den_at_Gettysburg_from_Little_Round_Top.jpg"}], "wheat": [{"f": "p-wheat-1.jpg", "y": "Today", "c": "The Wheatfield.", "w": 330, "h": 245, "cr": "Muhranoff · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg,_Weatfield.jpg"}, {"f": "p-wheat-2.jpg", "y": "Today", "c": "A fence line on the Wheatfield Road.", "w": 330, "h": 245, "cr": "Muhranoff · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg,_Wheatfield_road_fence.jpg"}], "peach": [{"f": "p-peach-1.jpg", "y": "After 1865", "c": "Edwin Forbes's painting of the fight at the Peach Orchard.", "w": 330, "h": 158, "cr": "Edwin Forbes, Library of Congress · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg_Peach_Orchard_Edwin_Forbes.jpg"}, {"f": "p-peach-2.jpg", "y": "Today", "c": "The Peach Orchard, replanted.", "w": 330, "h": 252, "cr": "Muhranoff · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg,_The_Peach_Orchard.jpg"}], "trostle": [{"f": "p-trostle-1.jpg", "y": "July 1863", "c": "The Trostle house days after the battle, by Timothy O'Sullivan. The dead horses belonged to Bigelow's battery.", "w": 330, "h": 264, "cr": "Timothy H. O'Sullivan, National Archives · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Pennsylvania,_Gettysburg_Battlefield,_Trossel%27s_(Trostle%27s)_House._-_NARA_-_533316.jpg"}, {"f": "p-trostle-2.jpg", "y": "Today", "c": "The Trostle barn. The shell hole is in the brick gable.", "w": 330, "h": 220, "cr": "Veggies · CC BY 4.0", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg-Abraham-Trostle-Barn-03.jpg"}], "pamem": [{"f": "p-pamem-1.jpg", "y": "1913", "c": "The memorial during the fiftieth-anniversary reunion.", "w": 330, "h": 456, "cr": "Unidentified photographer, Pennsylvania at Gettysburg (1914) · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Pennsylvania_at_Gettysburg_vol.3_opp._p.37.jpg"}, {"f": "p-pamem-2.jpg", "y": "Today", "c": "The Pennsylvania Memorial.", "w": 330, "h": 440, "cr": "LostplanetKD73 · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:State_of_Pennsylvania_Monument_at_Gettysburg_in_2022.jpg"}], "spring": [{"f": "p-spring-1.jpg", "y": "1930s", "c": "Spangler's Spring on a period postcard.", "w": 330, "h": 210, "cr": "Period postcard, Boston Public Library · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Spangler%27s_Spring,_Gettysburg,_Pa_(61711).jpg"}, {"f": "p-spring-2.jpg", "y": "Today", "c": "The stonework over the spring.", "w": 330, "h": 220, "cr": "Veggies · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Spangler_Springs_Stone_Works_04.jpg"}], "culps": [{"f": "p-culps-1.jpg", "y": "About 1863", "c": "Union breastworks on Culp's Hill.", "w": 330, "h": 274, "cr": "Unknown photographer · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Union_breastworks_Culp%27s_Hill_Gettysburg.jpg"}, {"f": "p-culps-2.jpg", "y": "Today", "c": "The observation tower on the summit.", "w": 330, "h": 440, "cr": "Doug Kerr from Albany, NY, United States · CC BY-SA 2.0", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg_Battlefield_(3441652672).jpg"}], "ech": [{"f": "p-ech-1.jpg", "y": "July 1863", "c": "The Evergreen Cemetery gatehouse, by Timothy O'Sullivan.", "w": 330, "h": 272, "cr": "Timothy H. O'Sullivan, National Archives · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Pennsylvania,_Gettysburg,_Gateway_of_Cemetery_-_NARA_-_533313.jpg"}, {"f": "p-ech-2.jpg", "y": "Today", "c": "The gatehouse today.", "w": 330, "h": 207, "cr": "George Neat · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Evergreen_Cemetery_Gatehouse_-_55477799362.jpg"}], "meadehq": [{"f": "p-meadehq-1.jpg", "y": "July 1863", "c": "Meade's headquarters at the Leister house, by Timothy O'Sullivan.", "w": 330, "h": 276, "cr": "Timothy H. O'Sullivan · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Headquarters_of_George_Meade.jpg"}, {"f": "p-meadehq-2.jpg", "y": "Today", "c": "The Leister house.", "w": 330, "h": 247, "cr": "Smallbones · CC0", "u": "https://commons.wikimedia.org/wiki/File:Meade_HQ_Leister_Farm_Gettysburg_PA.jpg"}], "angle": [{"f": "p-angle-1.jpg", "y": "1887", "c": "Thure de Thulstrup's painting of the Union line during the assault.", "w": 330, "h": 239, "cr": "Thure de Thulstrup, restored by Adam Cuerden · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Thure_de_Thulstrup_-_L._Prang_and_Co._-_Battle_of_Gettysburg_-_Restoration_by_Adam_Cuerden.jpg"}, {"f": "p-angle-2.jpg", "y": "Today", "c": "The stone wall at the Angle.", "w": 330, "h": 247, "cr": "JediKnyghte · CC BY-SA 3.0", "u": "https://commons.wikimedia.org/wiki/File:TheAngle2.jpg"}], "cemetery": [{"f": "p-cemetery-1.jpg", "y": "1930s", "c": "The cemetery on a period postcard, showing the half circle of graves.", "w": 330, "h": 207, "cr": "Period postcard, Boston Public Library · Public domain", "u": "https://commons.wikimedia.org/wiki/File:The_Soldiers%27_National_Cemetery,_Gettysburg,_Pa_(64235).jpg"}, {"f": "p-cemetery-2.jpg", "y": "Today", "c": "Graves around the Soldiers' National Monument.", "w": 330, "h": 220, "cr": "Henryhartley · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg_national_cemetery_img_4164.jpg"}], "ecf": [{"f": "p-ecf-1.jpg", "y": "1887", "c": "The cavalry shaft on East Cavalry Field.", "w": 330, "h": 237, "cr": "Photographer of 1887 · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Gregg_Cavalry_Shaft_p176.jpg"}], "town": [{"f": "p-town-1.jpg", "y": "July 1863", "c": "Gettysburg seen from Seminary Ridge.", "w": 330, "h": 336, "cr": "Unknown photographer · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg_from_Seminary.jpg"}, {"f": "p-town-2.jpg", "y": "Today", "c": "Lincoln Square.", "w": 330, "h": 221, "cr": "National Archives · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Journey_Through_Hallowed_Ground_Byway_-_Lincoln_Square_in_Downtown_Gettysburg_-_NARA_-_7719715.jpg"}], "station": [{"f": "p-station-1.jpg", "y": "Today", "c": "The station Lincoln arrived at, restored.", "w": 330, "h": 207, "cr": "George Neat · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg_Train_Station_-_54731964525.jpg"}], "wills": [{"f": "p-wills-1.jpg", "y": "1930s", "c": "The square on a period postcard, with the Wills house marked.", "w": 330, "h": 209, "cr": "Period postcard, Boston Public Library · Public domain", "u": "https://commons.wikimedia.org/wiki/File:The_square_at_Gettysburg,_Pa.,_showing_Wills_House._Arrow_showing_room_in_which_President_Lincoln_wrote_his_immortal_Gettysburg_Address_(85949).jpg"}, {"f": "p-wills-2.jpg", "y": "Today", "c": "The David Wills House.", "w": 330, "h": 213, "cr": "Jerrye & Roy Klotz, MD · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:WILLS_HOUSE,_GETTYSBURG,_ADAMS_CTY.,_PA.jpg"}], "church": [{"f": "p-church-1.jpg", "y": "November 19, 1863", "c": "The procession to the cemetery on Baltimore Street, photographed by the Tyson brothers.", "w": 330, "h": 282, "cr": "Tyson Brothers · CC0", "u": "https://commons.wikimedia.org/wiki/File:Procession_of_Troops_and_Civilians_on_Way_to_Dedication_of_Soldiers%27_National_Cemetery,_Gettysburg,_Pennsylvania_MET_DP274778.jpg"}, {"f": "p-church-2.jpg", "y": "1930s", "c": "The Presbyterian Church on a period postcard, with the Lincoln pew inset.", "w": 330, "h": 212, "cr": "Period postcard, Boston Public Library · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Presbyterian_Church,_Gettysburg,_Pa._Insert_shows_the_pew_Lincoln_occupied_(70971).jpg"}], "speechmem": [{"f": "p-speechmem-1.jpg", "y": "1930s", "c": "The Lincoln Speech Memorial on a period postcard.", "w": 330, "h": 207, "cr": "Period postcard, Boston Public Library · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Lincoln_Speech_Memorial,_Gettysburg,_Pa_(64232).jpg"}], "monsite": [{"f": "p-monsite-1.jpg", "y": "1874", "c": "William Saunders's plan of the cemetery.", "w": 330, "h": 237, "cr": "William Saunders · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Bartlett_Soldiers%27_National_Cemetery_1874_opp._p.12.jpg"}, {"f": "p-monsite-2.jpg", "y": "Today", "c": "The Soldiers' National Monument.", "w": 330, "h": 241, "cr": "P. Hughes · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg_National_Cemetery_(2019).jpg"}], "platform": [{"f": "p-platform-1.jpg", "y": "Today", "c": "The graves in Evergreen Cemetery, just beyond the fence, where Frassanito placed the platform.", "w": 330, "h": 196, "cr": "Donaldecoho · CC BY-SA 3.0", "u": "https://commons.wikimedia.org/wiki/File:Gaddress_frassanito_natcem.jpg"}, {"f": "p-speechmem-2.jpg", "y": "Today", "c": "A Park Service sign about the Address beside the iron fence, with Evergreen Cemetery beyond.", "w": 330, "h": 495, "cr": "Kvanwagn · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg_Address_interpretive_sign_at_Gettysburg_Address_Memorial.jpg"}], "evergreen": [{"f": "p-evergreen-1.jpg", "y": "1860s", "c": "The cemetery gate after the battle.", "w": 330, "h": 254, "cr": "Library of Congress · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Battle-field_of_Gettysburg._The_cemetery_gate_LCCN2012647705.jpg"}, {"f": "p-evergreen-2.jpg", "y": "Today", "c": "Guns on Cemetery Hill beside Evergreen.", "w": 330, "h": 220, "cr": "Veggies · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Batt-B-4th-US-Arty-Cemetery-Hill-03.jpg"}], "lincolncem": [{"f": "p-lincolncem-1.jpg", "y": "Today", "c": "Lincoln Cemetery.", "w": 330, "h": 223, "cr": "National Archives · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Journey_Through_Hallowed_Ground_Byway_-_Over_the_Fence_From_the_Lincoln_Cemetery_-_NARA_-_7719711.jpg"}]};
+
 (function(){
 "use strict";
 var $=function(s){return document.querySelector(s)};
@@ -1718,7 +1762,7 @@ function reliefCanvas(){
 }
 
 /* Texture for the 3D model: relief plus roads, streams, troop positions and stop pins. */
-function texCanvas(){
+function texCanvas(phKey){
   var S4=4,W=DEM.cols*S4,H=DEM.rows*S4,can=document.createElement("canvas");can.width=W*1.5;can.height=H*1.5;var g=can.getContext("2d");g.scale(1.5,1.5);
   g.drawImage(reliefCanvas(),0,0);
   function px(ll){return [(ll[1]-DEM.w)/(DEM.e-DEM.w)*W,(DEM.n-ll[0])/(DEM.n-DEM.s)*H]}
@@ -1736,7 +1780,7 @@ function texCanvas(){
   BASE.hills.forEach(function(h){text([h[1],h[2]],h[0].toUpperCase(),muted,17)});
   BASE.ridges.forEach(function(r){text(r[2],r[0].toUpperCase(),muted,17)});
   text([39.8302,-77.2312],"GETTYSBURG",muted,19);
-  var ph=PH[S.phase];
+  var ph=PH[phKey||S.phase]||{};
   (ph.u||[]).forEach(function(l){line(l,U,8)});(ph.ud||[]).forEach(function(l){line(l,U,6,[4,12])});(ph.c||[]).forEach(function(l){line(l,C,8)});
   (ph.ca||[]).forEach(function(l){line(l,C,5);head(l,C)});(ph.ua||[]).forEach(function(l){line(l,U,5,[8,10]);head(l,U)});
   P.forEach(function(p){if(p.k!=="stop")return;var q=px([p.lat,p.lon]);if(q[0]<0||q[0]>W||q[1]<0||q[1]>H)return;
@@ -1744,6 +1788,21 @@ function texCanvas(){
     g.fillStyle=cv_card;g.font="700 17px 'Barlow Condensed','Arial Narrow',Arial,sans-serif";g.textAlign="center";g.textBaseline="middle";g.fillText(p.num,q[0],q[1]+1)});
   (ph.tx||[]).forEach(function(t){text(t.at,t.t,t.c==="u"?U:C,19,true)});
   return can;
+}
+
+/* Situation map for one stop: a window of the relief with that day's positions. */
+var situCache={};
+function situPhase(p){if(!p.day||!p.day.length)return "none";if(p.id==="mcph"||p.id==="rrcut")return "d1a";return {1:"d1b",2:"d2",3:"d3"}[p.day[0]]}
+function situCanvas(p){
+  if(!Z||!sample(p.lat,p.lon))return null;
+  var k=situPhase(p),key=k+(isDark()?"d":"l");if(!situCache[key])situCache[key]=texCanvas(k);
+  var src=situCache[key],W=src.width,H=src.height,cx=(p.lon-DEM.w)/(DEM.e-DEM.w)*W,cy=(DEM.n-p.lat)/(DEM.n-DEM.s)*H;
+  var half=1.25*W/((DEM.e-DEM.w)*111.2*Math.cos(FIELD.lat*RAD)),hh=half*0.72;
+  var sx=Math.max(0,Math.min(W-2*half,cx-half)),sy=Math.max(0,Math.min(H-2*hh,cy-hh));
+  var c=document.createElement("canvas");c.width=Math.round(2*half);c.height=Math.round(2*hh);var g=c.getContext("2d");
+  g.drawImage(src,sx,sy,2*half,2*hh,0,0,c.width,c.height);
+  g.beginPath();g.arc(cx-sx,cy-sy,25,0,7);g.lineWidth=5;g.strokeStyle=cv("--brass");g.stroke();
+  return c;
 }
 
 /* ---------- 3D model of the field ---------- */
@@ -1849,6 +1908,9 @@ function openSheet(id){
   if(p.k==="stop")h+='<button class="btn" data-act="here" data-id="'+p.id+'">I\'m here: look around</button>';
   h+='<button class="btn ghost" data-act="map" data-id="'+p.id+'">Show on map</button>';
   h+='<a class="btn ghost" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination='+p.lat+","+p.lon+'">Directions</a></div>';
+  if(IMG[p.id]){h+='<div class="gal">';IMG[p.id].forEach(function(m){h+='<figure><img loading="lazy" src="'+m.f+'" width="'+m.w+'" height="'+m.h+'" alt="'+esc(m.c)+'"><figcaption><b>'+esc(m.y)+"</b>"+esc(m.c)+'<a href="'+m.u+'" target="_blank" rel="noopener">'+esc(m.cr)+" · Wikimedia Commons</a></figcaption></figure>"});h+="</div>"}
+  var sk=situPhase(p),hasSitu=!!(Z&&sample(p.lat,p.lon));
+  if(hasSitu)h+='<figure class="situ"><div id="situBox"></div><figcaption><b>Map</b>'+(PH[sk]?"Where the armies stood: "+PH[sk].label+". ":"The ground around this stop. ")+"Blue is Union, red Confederate. The ring marks this stop. North is up; the window is about a mile and a half wide.</figcaption></figure>";
   if(p.views&&p.views.length){
     h+='<h3>From here, look</h3><ul class="looks">';
     p.views.forEach(function(v){var b=viewBrg(p,v);
@@ -1860,6 +1922,7 @@ function openSheet(id){
   if(p.src){h+='<details><summary>Sources</summary><ul class="src">';p.src.forEach(function(s){h+="<li>"+esc(s)+"</li>"});h+="</ul></details>"}
   if(p.k!=="stop"||S.useGps)h+='<p class="lead">'+fmtD(dist(pos,p))+" "+pt(brg(pos,p))+" of "+(S.useGps?"you":esc(byId[S.here].n))+".</p>";
   var body=$("#sheetBody");body.innerHTML=h;body.scrollTop=0;
+  if(hasSitu){try{var sc=situCanvas(p);if(sc)$("#situBox").appendChild(sc)}catch(e){}}
   var nav=$("#sheetNav"),TL=tourOf(layerOf(p)),i=p.k==="stop"?TL.indexOf(p):-1,nh="";
   if(i>=0){if(i>0)nh+='<button class="btn ghost" data-act="go" data-id="'+TL[i-1].id+'">\u2190 Back</button>';
     if(i<TL.length-1)nh+='<button class="btn" data-act="next" data-cur="'+p.id+'" data-id="'+TL[i+1].id+'">Next: '+esc(TL[i+1].n)+' \u2192</button>'}
@@ -1872,7 +1935,7 @@ function setHere(id,keepGps){
   S.here=id;store.set("here",id);if(!keepGps)S.useGps=false;
   var p=byId[id];
   if(!S.sensor&&p.views&&p.views.length)S.heading=viewBrg(p,p.views[0]);
-  sitStop=null;lookDirty=true;markHere();syncHereSelect();
+  sitStop=null;lookDirty=true;situCache={};markHere();syncHereSelect();
 }
 
 /* ---------- tour list ---------- */
@@ -1883,12 +1946,12 @@ function renderTour(){
   TL.forEach(function(p){
     var tags=(p.star?'<span class="tag star">Must see</span>':"")+(p.opt?'<span class="tag">Optional</span>':"")+(p.nps?'<span class="tag">NPS '+p.nps+"</span>":"")+
       (S.useGps?'<span class="tag">'+fmtD(dist(pos,p))+"</span>":"");
-    h+='<li class="'+(p.opt?"opt ":"")+(S.done[p.id]?"done":"")+'"><span class="num">'+p.num+'</span><button class="open" data-id="'+p.id+'"><h3>'+esc(p.n)+"</h3><p>"+tags+esc(p.when)+"</p><p>"+esc(p.s)+
+    h+='<li class="'+(p.opt?"opt ":"")+(S.done[p.id]?"done":"")+'"><span class="num">'+p.num+'</span><button class="open" data-id="'+p.id+'">'+(IMG[p.id]?'<img class="th" loading="lazy" src="'+IMG[p.id][0].f+'" alt="">':"")+'<h3>'+esc(p.n)+"</h3><p>"+tags+esc(p.when)+"</p><p>"+esc(p.s)+
       '</p></button><input type="checkbox" id="done-'+p.id+'" data-id="'+p.id+'" aria-label="Visited '+esc(p.n)+'"'+(S.done[p.id]?" checked":"")+"></li>";
   });
   $("#tourList").innerHTML=h;
   var main=TL.filter(function(p){return !p.opt}),nx=null,k=0;for(var q=0;q<main.length;q++){if(!S.done[main[q].id]){nx=main[q];k=q;break}}
-  $("#tourNow").innerHTML=nx?'<div class="next"><div class="when">'+(k===0?"Start here":"Next stop")+" · "+(k+1)+" of "+main.length+(S.useGps?" · "+fmtD(dist(pos,nx))+" away":"")+"</div><h2>"+esc(nx.n)+"</h2><p>"+esc(SUM[nx.id][0])+
+  $("#tourNow").innerHTML=nx?'<div class="next"><div class="when">'+(k===0?"Start here":"Next stop")+" · "+(k+1)+" of "+main.length+(S.useGps?" · "+fmtD(dist(pos,nx))+" away":"")+"</div>"+(IMG[nx.id]?'<img loading="lazy" src="'+IMG[nx.id][0].f+'" alt="">':"")+"<h2>"+esc(nx.n)+"</h2><p>"+esc(SUM[nx.id][0])+
     '</p><div class="acts"><button class="btn open" data-id="'+nx.id+'">Open this stop</button><a class="btn ghost" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination='+nx.lat+","+nx.lon+'">Drive there</a></div></div>':
     '<div class="next"><h2>Tour complete</h2><p>You have seen every stop. The optional stops and the reading list are still here.</p></div>';
 }
@@ -2137,6 +2200,10 @@ function init(){
     else if(navigator.clipboard)navigator.clipboard.writeText(u).then(function(){toast("Link copied. Paste it into a message.")},function(){toast(u)});else toast(u)})}
   $("#tourList").addEventListener("change",function(e){var c=e.target;if(c.type!=="checkbox")return;if(c.checked)S.done[c.dataset.id]=1;else delete S.done[c.dataset.id];store.set("done",S.done);c.closest("li").classList.toggle("done",c.checked)});
   $("#sheetClose").addEventListener("click",closeSheet);
+  document.addEventListener("error",function(e){var el=e.target;if(el&&el.tagName==="IMG"&&/^p-/.test(el.getAttribute("src")||"")){var f=el.closest("figure");(f||el).style.display="none"}},true);
+  $("#sheetBody").addEventListener("click",function(e){var im=e.target.closest(".gal img");if(!im)return;$("#zoomImg").src=im.getAttribute("src");$("#zoom").classList.add("on")});
+  $("#zoom").addEventListener("click",function(){$("#zoom").classList.remove("on")});
+  $("#goRead").addEventListener("click",function(){$("#start").classList.add("off");setTab("brief");var el=document.getElementById("before");if(el)el.scrollIntoView({block:"start"})});
   $("#sheetBody").addEventListener("click",function(e){var b=e.target.closest("button[data-act]");if(!b)return;var id=b.dataset.id;
     if(b.dataset.act==="here"){setHere(id);closeSheet();setTab("look")}
     else{closeSheet();setTab("map");if(map)setTimeout(function(){map.setView([byId[id].lat,byId[id].lon],16)},30)}});
@@ -2177,7 +2244,10 @@ function init(){
   setTab(S.tab);
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
-try{if("serviceWorker" in navigator&&location.protocol==="https:")navigator.serviceWorker.register("sw.js").catch(function(){})}catch(e){}
+try{if("serviceWorker" in navigator&&location.protocol==="https:")navigator.serviceWorker.register("sw.js").then(function(){
+  setTimeout(function(){var q=[];Object.keys(IMG).forEach(function(k){IMG[k].forEach(function(m){q.push(m.f)})});
+    (function nx(){var f=q.shift();if(!f)return;fetch(f).catch(function(){}).then(function(){setTimeout(nx,150)})})()},6000); // keep the pictures for use without signal
+}).catch(function(){})}catch(e){}
 window.__gb={elev:elev,set3d:set3d,S:S,sun:sun,sunTimes:sunTimes,brg:brg,dist:dist};
 })();
 
