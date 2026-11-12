@@ -883,6 +883,26 @@ ol.tour img.th{float:right;width:68px;height:68px;object-fit:cover;border-radius
 #zoom.on{display:flex}
 #zoom img{max-width:100%;max-height:100%}
 
+#tl{padding:6px 16px 0}
+.tlrow{display:flex;gap:6px;align-items:center}
+.tlrow button{border:1px solid var(--line);background:var(--card);border-radius:8px;min-width:40px;height:36px;padding:0 12px;font:700 17px var(--display);letter-spacing:.03em}
+.tlrow button:disabled{opacity:.4}
+#tlPlay.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+#tlWhen{flex:1;text-align:right;font:700 21px var(--display);letter-spacing:.01em}
+#tlRange{width:100%;margin:4px 0 0;accent-color:var(--brass);height:24px}
+.tldays{display:flex;font:600 11px var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+#tl .cap{padding:0 0 3px;min-height:4.1em;font-size:13px;line-height:1.35}
+#tl .key{padding:0 0 6px;justify-content:space-between;font-size:12px}
+#tlTotals{font:600 14px var(--display);letter-spacing:.02em}
+.unitm{transition:transform .8s ease}
+.nozt .unitm{transition:none}
+.unit{width:100%;height:100%;border-radius:5px;color:#fff;text-align:center;line-height:1.05;padding:4px 3px 0;box-shadow:0 1px 4px rgba(0,0,0,.45);border:1.5px solid var(--card);overflow:hidden;cursor:pointer}
+.unit.u{background:#1D4F91} .unit.c{background:#B4281E}
+.unit b{display:block;font:700 15px/1.1 var(--display);letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.unit i{display:block;font:600 12px/1.15 var(--display);font-style:normal;letter-spacing:.02em;opacity:.95;white-space:nowrap;font-variant-numeric:tabular-nums}
+.unit.corps{padding-top:3px} .unit.corps b{font-size:14.5px} .unit.corps i{font-size:11.5px}
+@media (prefers-reduced-motion: reduce){.unitm{transition:none}}
+
 </style>
 </head>
 <body>
@@ -891,14 +911,13 @@ ol.tour img.th{float:right;width:68px;height:68px;object-fit:cover;border-radius
 <main>
 
 <section class="view on" id="v-map" aria-label="Map">
-  <div class="chips" id="phases" role="group" aria-label="Phase of the battle">
-    <button class="chip on" data-ph="d1a">July 1, morning</button>
-    <button class="chip" data-ph="d1b">July 1, afternoon</button>
-    <button class="chip" data-ph="d2">July 2</button>
-    <button class="chip" data-ph="d3">July 3</button>
+  <div id="tl">
+    <div class="tlrow"><button id="tlPrev" aria-label="Earlier">‹</button><button id="tlPlay">Play</button><button id="tlNext" aria-label="Later">›</button><div id="tlWhen"></div></div>
+    <input type="range" id="tlRange" min="0" max="12" step="1" value="0" aria-label="Time during the battle">
+    <div class="tldays" aria-hidden="true"><span style="flex:5">July 1</span><span style="flex:4">July 2</span><span style="flex:3.4">July 3</span></div>
+    <p class="cap" id="phcap"></p>
+    <div class="key"><span id="tlTotals"></span><span id="mapnote">Estimates. Tap a unit. Zoom in for divisions.</span></div>
   </div>
-  <p class="cap" id="phcap"></p>
-  <div class="key"><span><i style="background:var(--union)"></i>Union</span><span><i style="background:var(--conf)"></i>Confederate</span><span id="mapnote">Schematic map. Positions approximate. Tap a pin.</span></div>
   <div id="mapwrap"><div id="map"></div><canvas id="map3d" hidden></canvas><div id="mapmsg" hidden>The map could not load. The Tour and Look tabs work without it.</div><button id="locate">Find me</button><button id="b3d">3D terrain</button>
     <div id="views3d" hidden><button data-v="s">From the south</button><button data-v="w">Lee's side</button><button data-v="e">Meade's side</button><button data-v="top">Overhead</button><span>Heights ×5. Drag to turn, pinch to zoom.</span></div></div>
 </section>
@@ -1213,7 +1232,7 @@ ol.tour img.th{float:right;width:68px;height:68px;object-fit:cover;border-radius
     <h3>Limits of this guide</h3>
     <ul>
       <li>Stop positions are the monument or landmark locations and are accurate to a few yards. The spot where Reynolds fell and the Bliss farm site are placed by description and marked approximate.</li>
-      <li>Troop lines and arrows on the map show the general position of each army in that phase. They are not a survey.</li>
+      <li>Unit positions on the map are approximate, one point per division at each of thirteen moments. Strengths are estimates rounded to the nearest hundred, after Busey and Martin, and fall as each division's losses accumulate across the three days. The totals count the divisions shown and leave out headquarters and some artillery.</li>
       <li>The relief, the 3D model and the drawn ground in Look come from NASA's SRTM elevation survey, about 30 metres between points. They show the shape of the land, not trees, fences or buildings. A label marked "behind high ground" is hidden according to that data.</li>
       <li>In Look, the labels are placed by compass bearing from where you stand. Trees and ridges will hide some of what they point to.</li>
     </ul>
@@ -1681,6 +1700,59 @@ Object.assign(SUM,{
 /* Pictures: public-domain and Creative Commons images from Wikimedia Commons, credited individually. */
 const IMG={"vc": [{"f": "p-vc-1.jpg", "y": "1883", "c": "Detail of the Cyclorama: a caisson explodes during the July 3 assault. Painted by Paul Philippoteaux.", "w": 960, "h": 643, "cr": "Ron Cogswell · CC BY 2.0", "u": "https://commons.wikimedia.org/wiki/File:Caisson_Exploding_--_Gettysburg_Cyclorama_2012.jpg"}, {"f": "p-vc-2.jpg", "y": "Today", "c": "The Museum and Visitor Center.", "w": 960, "h": 539, "cr": "Concord · CC BY-SA 3.0", "u": "https://commons.wikimedia.org/wiki/File:GettysburgVisitorCenter.JPG"}], "mcph": [{"f": "p-mcph-1.jpg", "y": "1860s", "c": "McPherson's Woods, where the Iron Brigade met Archer's brigade.", "w": 960, "h": 525, "cr": "Library of Congress · Public domain", "u": "https://commons.wikimedia.org/wiki/File:The_battle-field_of_Gettysburg._McPherson%27s_woods_in_which_Archer%27s_(Confederate)_Brigade_was_captured,_view_of_the_side_towards_the_Chambersburg_pike_LCCN2012646949.jpg"}, {"f": "p-mcph-2.jpg", "y": "Today", "c": "The McPherson barn, the one farm building that survives.", "w": 960, "h": 676, "cr": "TotalGettysburg · CC BY 3.0", "u": "https://commons.wikimedia.org/wiki/File:TotalGettysburg_McPhersonFarm.jpg"}], "rrcut": [{"f": "p-rrcut-1.jpg", "y": "Today", "c": "The railroad cut through McPherson Ridge. The track was laid after the war.", "w": 960, "h": 720, "cr": "George Neat · CC BY 2.0", "u": "https://commons.wikimedia.org/wiki/File:McPherson_Ridge_railway_cut_-_33311821763.jpg"}], "peace": [{"f": "p-peace-1.jpg", "y": "1930s", "c": "The memorial on a postcard from the years after its 1938 dedication.", "w": 960, "h": 606, "cr": "Period postcard, Boston Public Library · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Eternal_Light_Peace_Memorial,_Gettysburg,_Pennsylvania_(65043).jpg"}, {"f": "p-peace-2.jpg", "y": "Today", "c": "The Eternal Light Peace Memorial on Oak Hill.", "w": 960, "h": 640, "cr": "Ruhrfisch · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Eternal_Light_Peace_Memorial,_Gettysburg_National_Military_Park.jpg"}], "oakridge": [{"f": "p-oakridge-1.jpg", "y": "1930s", "c": "The observation tower on a period postcard.", "w": 330, "h": 520, "cr": "Period postcard, Boston Public Library · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Observation_Tower_on_Oak_Ridge,_Gettysburg,_PA_(64227).jpg"}, {"f": "p-oakridge-2.jpg", "y": "Today", "c": "The stone wall and monuments along Oak Ridge.", "w": 330, "h": 220, "cr": "Muhranoff · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg,_Oak_Ridge.jpg"}], "barlow": [{"f": "p-barlow-1.jpg", "y": "About 1903", "c": "The summit of Barlow's Knoll.", "w": 330, "h": 264, "cr": "Detroit Publishing Company, Library of Congress · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Summit_of_Barlow%27s_Knoll,_Gettysburg._(cropped).jpg"}, {"f": "p-barlow-2.jpg", "y": "Today", "c": "Union guns on Barlow Knoll.", "w": 330, "h": 250, "cr": "Muhranoff · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg,_Union_artillery_at_Barlow_knoll.jpg"}], "seminary": [{"f": "p-seminary-1.jpg", "y": "1863", "c": "The Lutheran Seminary, photographed soon after the battle.", "w": 330, "h": 325, "cr": "Library of Congress · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg,_Pennsylvania._Lutheran_Theological_Seminary_LOC_cwpb.01650.jpg"}, {"f": "p-seminary-2.jpg", "y": "Today", "c": "The same building, now the Seminary Ridge Museum.", "w": 330, "h": 236, "cr": "Acroterion · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg_Seminary_PA1.jpg"}], "ncmem": [{"f": "p-ncmem-1.jpg", "y": "1865", "c": "Edwin Forbes's painting of the July 3 assault seen from the Confederate line.", "w": 330, "h": 164, "cr": "Library of Congress · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Picketts_charge_from_a_position_on_the_enemys_line_looking_toward_the_Union_lines,_Zieglers_grove_on_the_left,_clump_of_trees_on_right_-_Edwin_Forbes._LCCN2004661944.jpg"}, {"f": "p-ncmem-2.jpg", "y": "Today", "c": "The North Carolina Memorial.", "w": 330, "h": 220, "cr": "Dsdugan · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:15_23_0318_gettysburg_nc.jpg"}], "vamem": [{"f": "p-vamem-1.jpg", "y": "1917", "c": "The Virginia Memorial in the year it was dedicated.", "w": 330, "h": 440, "cr": "From a 1917 publication · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Virginia_memorial_at_gettysburg.jpg"}, {"f": "p-vamem-2.jpg", "y": "Today", "c": "The memorial and the fields the assault crossed.", "w": 330, "h": 247, "cr": "Wikimedia Commons contributor · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg_National_Military_Park_20.JPG"}], "pitzer": [{"f": "p-pitzer-1.jpg", "y": "Today", "c": "The Longstreet monument in Pitzer Woods, dedicated in 1998.", "w": 330, "h": 186, "cr": "MRNAMessenger · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Lt._General_Longstreet,_Gettysburg,_Pa.jpg"}], "warfield": [{"f": "p-warfield-1.jpg", "y": "Today", "c": "The observation tower on Warfield Ridge.", "w": 330, "h": 247, "cr": "MPSharwood · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Confederate_observation_tower,_Gettysburg_National_Military_Park.jpg"}, {"f": "p-warfield-2.jpg", "y": "Today", "c": "The view east from the tower.", "w": 330, "h": 220, "cr": "David Dugan · CC BY-SA 3.0", "u": "https://commons.wikimedia.org/wiki/File:15-23-0348,_view_east_from_longstreet_tower_-_panoramio.jpg"}], "lrt": [{"f": "p-lrt-1.jpg", "y": "July 1863", "c": "Little Round Top, photographed days after the fighting.", "w": 330, "h": 257, "cr": "Unknown photographer · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Little_Round_Top,_Gettysburg,_July,_1863_-_DPLA_-_fe6eac55a2b2f691820bdb7bec452c56.jpg"}, {"f": "p-lrt-2.jpg", "y": "After 1865", "c": "Edwin Forbes's painting of the view from Little Round Top.", "w": 330, "h": 155, "cr": "Edwin Forbes, Library of Congress · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Little_Round_Top_view_Edwin_Forbes.jpg"}, {"f": "p-lrt-3.jpg", "y": "Today", "c": "Warren's statue on the summit.", "w": 330, "h": 221, "cr": "Ron Cogswell · CC BY 2.0", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg_National_Military_Park_2012_-_Union_General_Gouverneur_Warren_on_Little_Round_Top.jpg"}], "den": [{"f": "p-den-1.jpg", "y": "1863", "c": "Edwin Forbes's view of Little Round Top and Devil's Den.", "w": 330, "h": 239, "cr": "Library of Congress · Public domain", "u": "https://commons.wikimedia.org/wiki/File:The_battle_of_Gettysburg._View_of_Little_Round_Top_and_the_Devil%27s_Den,_held_by_the_Fifth_Corps_LCCN2004661443.jpg"}, {"f": "p-den-2.jpg", "y": "1909", "c": "Devil's Den in 1909.", "w": 330, "h": 113, "cr": "Unknown photographer · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Devil%27s_Den_Gettysburg_1909.jpg"}, {"f": "p-den-3.jpg", "y": "Today", "c": "Devil's Den seen from Little Round Top.", "w": 330, "h": 220, "cr": "Northern-Virginia-Photographer · CC0", "u": "https://commons.wikimedia.org/wiki/File:View_of_Devil%27s_Den_at_Gettysburg_from_Little_Round_Top.jpg"}], "wheat": [{"f": "p-wheat-1.jpg", "y": "Today", "c": "The Wheatfield.", "w": 330, "h": 245, "cr": "Muhranoff · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg,_Weatfield.jpg"}, {"f": "p-wheat-2.jpg", "y": "Today", "c": "A fence line on the Wheatfield Road.", "w": 330, "h": 245, "cr": "Muhranoff · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg,_Wheatfield_road_fence.jpg"}], "peach": [{"f": "p-peach-1.jpg", "y": "After 1865", "c": "Edwin Forbes's painting of the fight at the Peach Orchard.", "w": 330, "h": 158, "cr": "Edwin Forbes, Library of Congress · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg_Peach_Orchard_Edwin_Forbes.jpg"}, {"f": "p-peach-2.jpg", "y": "Today", "c": "The Peach Orchard, replanted.", "w": 330, "h": 252, "cr": "Muhranoff · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg,_The_Peach_Orchard.jpg"}], "trostle": [{"f": "p-trostle-1.jpg", "y": "July 1863", "c": "The Trostle house days after the battle, by Timothy O'Sullivan. The dead horses belonged to Bigelow's battery.", "w": 330, "h": 264, "cr": "Timothy H. O'Sullivan, National Archives · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Pennsylvania,_Gettysburg_Battlefield,_Trossel%27s_(Trostle%27s)_House._-_NARA_-_533316.jpg"}, {"f": "p-trostle-2.jpg", "y": "Today", "c": "The Trostle barn. The shell hole is in the brick gable.", "w": 330, "h": 220, "cr": "Veggies · CC BY 4.0", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg-Abraham-Trostle-Barn-03.jpg"}], "pamem": [{"f": "p-pamem-1.jpg", "y": "1913", "c": "The memorial during the fiftieth-anniversary reunion.", "w": 330, "h": 456, "cr": "Unidentified photographer, Pennsylvania at Gettysburg (1914) · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Pennsylvania_at_Gettysburg_vol.3_opp._p.37.jpg"}, {"f": "p-pamem-2.jpg", "y": "Today", "c": "The Pennsylvania Memorial.", "w": 330, "h": 440, "cr": "LostplanetKD73 · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:State_of_Pennsylvania_Monument_at_Gettysburg_in_2022.jpg"}], "spring": [{"f": "p-spring-1.jpg", "y": "1930s", "c": "Spangler's Spring on a period postcard.", "w": 330, "h": 210, "cr": "Period postcard, Boston Public Library · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Spangler%27s_Spring,_Gettysburg,_Pa_(61711).jpg"}, {"f": "p-spring-2.jpg", "y": "Today", "c": "The stonework over the spring.", "w": 330, "h": 220, "cr": "Veggies · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Spangler_Springs_Stone_Works_04.jpg"}], "culps": [{"f": "p-culps-1.jpg", "y": "About 1863", "c": "Union breastworks on Culp's Hill.", "w": 330, "h": 274, "cr": "Unknown photographer · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Union_breastworks_Culp%27s_Hill_Gettysburg.jpg"}, {"f": "p-culps-2.jpg", "y": "Today", "c": "The observation tower on the summit.", "w": 330, "h": 440, "cr": "Doug Kerr from Albany, NY, United States · CC BY-SA 2.0", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg_Battlefield_(3441652672).jpg"}], "ech": [{"f": "p-ech-1.jpg", "y": "July 1863", "c": "The Evergreen Cemetery gatehouse, by Timothy O'Sullivan.", "w": 330, "h": 272, "cr": "Timothy H. O'Sullivan, National Archives · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Pennsylvania,_Gettysburg,_Gateway_of_Cemetery_-_NARA_-_533313.jpg"}, {"f": "p-ech-2.jpg", "y": "Today", "c": "The gatehouse today.", "w": 330, "h": 207, "cr": "George Neat · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Evergreen_Cemetery_Gatehouse_-_55477799362.jpg"}], "meadehq": [{"f": "p-meadehq-1.jpg", "y": "July 1863", "c": "Meade's headquarters at the Leister house, by Timothy O'Sullivan.", "w": 330, "h": 276, "cr": "Timothy H. O'Sullivan · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Headquarters_of_George_Meade.jpg"}, {"f": "p-meadehq-2.jpg", "y": "Today", "c": "The Leister house.", "w": 330, "h": 247, "cr": "Smallbones · CC0", "u": "https://commons.wikimedia.org/wiki/File:Meade_HQ_Leister_Farm_Gettysburg_PA.jpg"}], "angle": [{"f": "p-angle-1.jpg", "y": "1887", "c": "Thure de Thulstrup's painting of the Union line during the assault.", "w": 330, "h": 239, "cr": "Thure de Thulstrup, restored by Adam Cuerden · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Thure_de_Thulstrup_-_L._Prang_and_Co._-_Battle_of_Gettysburg_-_Restoration_by_Adam_Cuerden.jpg"}, {"f": "p-angle-2.jpg", "y": "Today", "c": "The stone wall at the Angle.", "w": 330, "h": 247, "cr": "JediKnyghte · CC BY-SA 3.0", "u": "https://commons.wikimedia.org/wiki/File:TheAngle2.jpg"}], "cemetery": [{"f": "p-cemetery-1.jpg", "y": "1930s", "c": "The cemetery on a period postcard, showing the half circle of graves.", "w": 330, "h": 207, "cr": "Period postcard, Boston Public Library · Public domain", "u": "https://commons.wikimedia.org/wiki/File:The_Soldiers%27_National_Cemetery,_Gettysburg,_Pa_(64235).jpg"}, {"f": "p-cemetery-2.jpg", "y": "Today", "c": "Graves around the Soldiers' National Monument.", "w": 330, "h": 220, "cr": "Henryhartley · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg_national_cemetery_img_4164.jpg"}], "ecf": [{"f": "p-ecf-1.jpg", "y": "1887", "c": "The cavalry shaft on East Cavalry Field.", "w": 330, "h": 237, "cr": "Photographer of 1887 · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Gregg_Cavalry_Shaft_p176.jpg"}], "town": [{"f": "p-town-1.jpg", "y": "July 1863", "c": "Gettysburg seen from Seminary Ridge.", "w": 330, "h": 336, "cr": "Unknown photographer · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg_from_Seminary.jpg"}, {"f": "p-town-2.jpg", "y": "Today", "c": "Lincoln Square.", "w": 330, "h": 221, "cr": "National Archives · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Journey_Through_Hallowed_Ground_Byway_-_Lincoln_Square_in_Downtown_Gettysburg_-_NARA_-_7719715.jpg"}], "station": [{"f": "p-station-1.jpg", "y": "Today", "c": "The station Lincoln arrived at, restored.", "w": 330, "h": 207, "cr": "George Neat · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg_Train_Station_-_54731964525.jpg"}], "wills": [{"f": "p-wills-1.jpg", "y": "1930s", "c": "The square on a period postcard, with the Wills house marked.", "w": 330, "h": 209, "cr": "Period postcard, Boston Public Library · Public domain", "u": "https://commons.wikimedia.org/wiki/File:The_square_at_Gettysburg,_Pa.,_showing_Wills_House._Arrow_showing_room_in_which_President_Lincoln_wrote_his_immortal_Gettysburg_Address_(85949).jpg"}, {"f": "p-wills-2.jpg", "y": "Today", "c": "The David Wills House.", "w": 330, "h": 213, "cr": "Jerrye & Roy Klotz, MD · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:WILLS_HOUSE,_GETTYSBURG,_ADAMS_CTY.,_PA.jpg"}], "church": [{"f": "p-church-1.jpg", "y": "November 19, 1863", "c": "The procession to the cemetery on Baltimore Street, photographed by the Tyson brothers.", "w": 330, "h": 282, "cr": "Tyson Brothers · CC0", "u": "https://commons.wikimedia.org/wiki/File:Procession_of_Troops_and_Civilians_on_Way_to_Dedication_of_Soldiers%27_National_Cemetery,_Gettysburg,_Pennsylvania_MET_DP274778.jpg"}, {"f": "p-church-2.jpg", "y": "1930s", "c": "The Presbyterian Church on a period postcard, with the Lincoln pew inset.", "w": 330, "h": 212, "cr": "Period postcard, Boston Public Library · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Presbyterian_Church,_Gettysburg,_Pa._Insert_shows_the_pew_Lincoln_occupied_(70971).jpg"}], "speechmem": [{"f": "p-speechmem-1.jpg", "y": "1930s", "c": "The Lincoln Speech Memorial on a period postcard.", "w": 330, "h": 207, "cr": "Period postcard, Boston Public Library · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Lincoln_Speech_Memorial,_Gettysburg,_Pa_(64232).jpg"}], "monsite": [{"f": "p-monsite-1.jpg", "y": "1874", "c": "William Saunders's plan of the cemetery.", "w": 330, "h": 237, "cr": "William Saunders · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Bartlett_Soldiers%27_National_Cemetery_1874_opp._p.12.jpg"}, {"f": "p-monsite-2.jpg", "y": "Today", "c": "The Soldiers' National Monument.", "w": 330, "h": 241, "cr": "P. Hughes · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg_National_Cemetery_(2019).jpg"}], "platform": [{"f": "p-platform-1.jpg", "y": "Today", "c": "The graves in Evergreen Cemetery, just beyond the fence, where Frassanito placed the platform.", "w": 330, "h": 196, "cr": "Donaldecoho · CC BY-SA 3.0", "u": "https://commons.wikimedia.org/wiki/File:Gaddress_frassanito_natcem.jpg"}, {"f": "p-speechmem-2.jpg", "y": "Today", "c": "A Park Service sign about the Address beside the iron fence, with Evergreen Cemetery beyond.", "w": 330, "h": 495, "cr": "Kvanwagn · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg_Address_interpretive_sign_at_Gettysburg_Address_Memorial.jpg"}], "evergreen": [{"f": "p-evergreen-1.jpg", "y": "1860s", "c": "The cemetery gate after the battle.", "w": 330, "h": 254, "cr": "Library of Congress · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Battle-field_of_Gettysburg._The_cemetery_gate_LCCN2012647705.jpg"}, {"f": "p-evergreen-2.jpg", "y": "Today", "c": "Guns on Cemetery Hill beside Evergreen.", "w": 330, "h": 220, "cr": "Veggies · CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Batt-B-4th-US-Arty-Cemetery-Hill-03.jpg"}], "lincolncem": [{"f": "p-lincolncem-1.jpg", "y": "Today", "c": "Lincoln Cemetery.", "w": 330, "h": 223, "cr": "National Archives · Public domain", "u": "https://commons.wikimedia.org/wiki/File:Journey_Through_Hallowed_Ground_Byway_-_Over_the_Fence_From_the_Lincoln_Cemetery_-_NARA_-_7719711.jpg"}]};
 
+/* ---- Timeline and forces. Strengths are estimates rounded to the nearest hundred (after Busey and Martin); positions approximate. ---- */
+const TL=[
+ {d:"July 1",t:"8:00 am",ph:"d1a",cap:"Buford's cavalry holds the ridges west of town as Heth's division comes down the Chambersburg Pike."},
+ {d:"July 1",t:"10:30 am",ph:"d1a",cap:"Reynolds brings up Wadsworth's division. Heth attacks and is thrown back. Reynolds is killed."},
+ {d:"July 1",t:"1:00 pm",ph:"d1b",cap:"A lull. The rest of the I Corps and the XI Corps arrive. Rodes appears on Oak Hill, on the Union flank."},
+ {d:"July 1",t:"3:30 pm",ph:"d1b",cap:"Rodes, Early and Pender attack together. The Union is outnumbered on the field and both corps give way."},
+ {d:"July 1",t:"6:00 pm",ph:"d1b",cap:"The Union rallies on Cemetery Hill and Culp's Hill. Confederates hold the town. More of both armies arrive overnight."},
+ {d:"July 2",t:"Noon",ph:"d2",cap:"Meade's fishhook is in place. Longstreet's two divisions are marching, out of sight, toward the Union left."},
+ {d:"July 2",t:"4:00 pm",ph:"d2",cap:"Sickles has moved forward to the Peach Orchard. Hood and McLaws attack. The V Corps hurries to the left."},
+ {d:"July 2",t:"6:30 pm",ph:"d2",cap:"Sickles's line collapses. The fight spreads through the Wheatfield to Little Round Top, and Anderson attacks the centre. The VI Corps arrives."},
+ {d:"July 2",t:"8:00 pm",ph:"d2",cap:"Johnson attacks Culp's Hill and Early storms East Cemetery Hill. Both are held."},
+ {d:"July 3",t:"8:00 am",ph:"d3",cap:"The XII Corps fights to retake its works on Culp's Hill. Pickett's division comes up behind Seminary Ridge."},
+ {d:"July 3",t:"1:00 pm",ph:"d3",cap:"The cannonade. Pickett, Pettigrew and Trimble wait in the woods on Seminary Ridge. Stuart rides east."},
+ {d:"July 3",t:"3:00 pm",ph:"d3",cap:"The assault on the Union centre. Gregg and Custer meet Stuart three miles to the east."},
+ {d:"July 3",t:"5:00 pm",ph:"d3",cap:"The assault is broken. Both armies hold their ridges. Lee prepares to retreat."}
+];
+/* k: step -> [lat,lon] where the unit is from that step on; null = has left the field. */
+const UNITS=[
+ {id:"buford",side:"u",corps:"cb",cn:"Buford (cav.)",cc:"Cavalry Corps",cs:"Cavalry",n:"Buford",full:"Buford's 1st Cavalry Division (two brigades on the field)",s:2700,loss:130,f:[1,0,0],k:{0:[39.8392,-77.2540],1:[39.8322,-77.2528],3:[39.8292,-77.2475],4:[39.8165,-77.2392],5:[39.8012,-77.2462],6:null}},
+ {id:"wadsworth",side:"u",corps:"1",cn:"I Corps",cc:"Reynolds, then Doubleday, Newton",cs:"I Corps",n:"Wadsworth",full:"Wadsworth's 1st Division, I Corps",s:3900,loss:2150,f:[.9,.07,.03],k:{1:[39.8376,-77.2512],3:[39.8352,-77.2496],4:[39.8208,-77.2222]}},
+ {id:"robinson",side:"u",corps:"1",cn:"I Corps",cc:"Reynolds, then Doubleday, Newton",cs:"I Corps",n:"Robinson",full:"Robinson's 2nd Division, I Corps",s:3000,loss:1690,f:[.97,0,.03],k:{2:[39.8436,-77.2423],4:[39.8188,-77.2334],10:[39.8176,-77.2332]}},
+ {id:"doubleday",side:"u",corps:"1",cn:"I Corps",cc:"Reynolds, then Doubleday, Newton",cs:"I Corps",n:"Doubleday",full:"3rd Division, I Corps (Rowley on July 1, then Doubleday)",s:4700,loss:2100,f:[.82,.03,.15],k:{2:[39.8342,-77.2520],3:[39.8326,-77.2458],4:[39.8192,-77.2318],7:[39.8098,-77.2352]}},
+ {id:"caldwell",side:"u",corps:"2",cn:"II Corps",cc:"Hancock",cs:"II Corps",n:"Caldwell",full:"Caldwell's 1st Division, II Corps",s:3300,loss:1270,f:[0,.97,.03],k:{5:[39.8062,-77.2350],7:[39.7972,-77.2425],8:[39.8062,-77.2350]}},
+ {id:"gibbon",side:"u",corps:"2",cn:"II Corps",cc:"Hancock",cs:"II Corps",n:"Gibbon",full:"Gibbon's 2nd Division, II Corps",s:3600,loss:1650,f:[0,.45,.55],k:{5:[39.8115,-77.2357]}},
+ {id:"hays",side:"u",corps:"2",cn:"II Corps",cc:"Hancock",cs:"II Corps",n:"Hays",full:"Alexander Hays's 3rd Division, II Corps",s:3600,loss:1290,f:[0,.35,.65],k:{5:[39.8156,-77.2350]}},
+ {id:"birney",side:"u",corps:"3",cn:"III Corps",cc:"Sickles, then Birney",cs:"III Corps",n:"Birney",full:"Birney's 1st Division, III Corps",s:5100,loss:2010,f:[0,.97,.03],k:{4:[39.8082,-77.2358],5:[39.8022,-77.2366],6:[39.7962,-77.2452],7:[39.7992,-77.2372],8:[39.8018,-77.2336],10:[39.8040,-77.2334]}},
+ {id:"humphreys",side:"u",corps:"3",cn:"III Corps",cc:"Sickles, then Birney",cs:"III Corps",n:"Humphreys",full:"Humphreys's 2nd Division, III Corps",s:4900,loss:2090,f:[0,.97,.03],k:{5:[39.8066,-77.2366],6:[39.8066,-77.2440],7:[39.8072,-77.2386],8:[39.8086,-77.2340],10:[39.8062,-77.2333]}},
+ {id:"barnes",side:"u",corps:"5",cn:"V Corps",cc:"Sykes",cs:"V Corps",n:"Barnes",full:"Barnes's 1st Division, V Corps (Vincent's brigade on Little Round Top)",s:3400,loss:900,f:[0,.97,.03],k:{5:[39.8106,-77.2236],6:[39.7952,-77.2396],8:[39.7912,-77.2368]}},
+ {id:"ayres",side:"u",corps:"5",cn:"V Corps",cc:"Sykes",cs:"V Corps",n:"Ayres",full:"Ayres's 2nd Division, V Corps (the U.S. Regulars)",s:4000,loss:1030,f:[0,.97,.03],k:{5:[39.8100,-77.2224],6:[39.7992,-77.2330],7:[39.7956,-77.2394],8:[39.7946,-77.2358]}},
+ {id:"crawford",side:"u",corps:"5",cn:"V Corps",cc:"Sykes",cs:"V Corps",n:"Crawford",full:"Crawford's 3rd Division, V Corps (Pennsylvania Reserves)",s:2900,loss:210,f:[0,.8,.2],k:{5:[39.8094,-77.2214],6:[39.8002,-77.2318],7:[39.7960,-77.2364],8:[39.7964,-77.2386]}},
+ {id:"wright",side:"u",corps:"6",cn:"VI Corps",cc:"Sedgwick",cs:"VI Corps",n:"Wright",full:"Wright's 1st Division, VI Corps",s:4200,loss:20,f:[0,.5,.5],k:{7:[39.8040,-77.2262],8:[39.7992,-77.2318]}},
+ {id:"howe",side:"u",corps:"6",cn:"VI Corps",cc:"Sedgwick",cs:"VI Corps",n:"Howe",full:"Howe's 2nd Division, VI Corps",s:3600,loss:20,f:[0,.5,.5],k:{7:[39.8030,-77.2250],8:[39.7858,-77.2352]}},
+ {id:"wheaton",side:"u",corps:"6",cn:"VI Corps",cc:"Sedgwick",cs:"VI Corps",n:"Wheaton",full:"3rd Division, VI Corps (Newton, then Wheaton)",s:4700,loss:200,f:[0,.5,.5],k:{7:[39.8020,-77.2272],8:[39.7976,-77.2360]}},
+ {id:"barlow",side:"u",corps:"11",cn:"XI Corps",cc:"Howard",cs:"XI Corps",n:"Barlow",full:"Barlow's 1st Division, XI Corps (Ames after July 1)",s:2500,loss:1310,f:[.85,.13,.02],k:{2:[39.8382,-77.2298],3:[39.8456,-77.2262],4:[39.8224,-77.2282]}},
+ {id:"schurz",side:"u",corps:"11",cn:"XI Corps",cc:"Howard",cs:"XI Corps",n:"Schurz",full:"Schurz's 3rd Division, XI Corps (Schimmelfennig on July 1)",s:3100,loss:1480,f:[.9,.08,.02],k:{2:[39.8402,-77.2342],3:[39.8426,-77.2346],4:[39.8216,-77.2304]}},
+ {id:"steinwehr",side:"u",corps:"11",cn:"XI Corps",cc:"Howard",cs:"XI Corps",n:"Steinwehr",full:"von Steinwehr's 2nd Division, XI Corps",s:2900,loss:950,f:[.6,.35,.05],k:{2:[39.8212,-77.2298],4:[39.8204,-77.2314]}},
+ {id:"williams",side:"u",corps:"12",cn:"XII Corps",cc:"Slocum, Williams",cs:"XII Corps",n:"Williams",full:"1st Division, XII Corps (Williams, then Ruger)",s:5300,loss:530,f:[0,.2,.8],k:{4:[39.8172,-77.2118],5:[39.8160,-77.2180],7:[39.8040,-77.2330],8:[39.8122,-77.2214],9:[39.8150,-77.2186],10:[39.8158,-77.2178]}},
+ {id:"geary",side:"u",corps:"12",cn:"XII Corps",cc:"Slocum, Williams",cs:"XII Corps",n:"Geary",full:"Geary's 2nd Division, XII Corps (Greene's brigade held Culp's Hill)",s:4000,loss:540,f:[0,.45,.55],k:{4:[39.7962,-77.2360],5:[39.8190,-77.2196]}},
+ {id:"artres",side:"u",corps:"ar",cn:"Artillery Res.",cc:"Tyler",cs:"Reserve",n:"Artillery Reserve",full:"Tyler's Artillery Reserve, about 110 guns",s:2400,loss:240,f:[0,.6,.4],k:{5:[39.8082,-77.2290]}},
+ {id:"gregg",side:"u",corps:"cg",cn:"Gregg (cav.)",cc:"Cavalry Corps",cs:"Cavalry",n:"Gregg",full:"David Gregg's 2nd Cavalry Division (with Custer's brigade on July 3)",s:2600,loss:60,f:[0,.2,.8],k:{6:[39.8292,-77.1952],10:[39.8246,-77.1682]}},
+ {id:"kilpatrick",side:"u",corps:"ck",cn:"Kilpatrick (cav.)",cc:"Cavalry Corps",cs:"Cavalry",n:"Kilpatrick",full:"Kilpatrick's 3rd Cavalry Division (Custer's brigade detached to Gregg)",s:3900,loss:350,f:[0,.1,.9],k:{10:[39.7792,-77.2482]}},
+ {id:"heth",side:"c",corps:"h",cn:"Hill's Corps",cc:"A. P. Hill",cs:"Hill",n:"Heth",full:"Heth's Division, Hill's Third Corps (Pettigrew commanding on July 3)",s:7500,loss:3360,f:[.6,0,.4],k:{0:[39.8410,-77.2626],1:[39.8386,-77.2566],2:[39.8400,-77.2616],3:[39.8366,-77.2546],4:[39.8342,-77.2562],5:[39.8232,-77.2512],10:[39.8186,-77.2486],11:[39.8160,-77.2386],12:[39.8188,-77.2492]}},
+ {id:"pender",side:"c",corps:"h",cn:"Hill's Corps",cc:"A. P. Hill",cs:"Hill",n:"Pender",full:"Pender's Division, Hill's Third Corps (two brigades under Trimble in the July 3 assault)",s:6700,loss:2390,f:[.55,.05,.4],k:{2:[39.8396,-77.2642],3:[39.8336,-77.2476],4:[39.8300,-77.2456],5:[39.8242,-77.2462],10:[39.8206,-77.2478],11:[39.8174,-77.2410],12:[39.8212,-77.2476]}},
+ {id:"anderson",side:"c",corps:"h",cn:"Hill's Corps",cc:"A. P. Hill",cs:"Hill",n:"Anderson",full:"R. H. Anderson's Division, Hill's Third Corps",s:7100,loss:2190,f:[0,.75,.25],k:{4:[39.8372,-77.2642],5:[39.8120,-77.2520],7:[39.8106,-77.2442],8:[39.8120,-77.2522]}},
+ {id:"rodes",side:"c",corps:"e",cn:"Ewell's Corps",cc:"Ewell",cs:"Ewell",n:"Rodes",full:"Rodes's Division, Ewell's Second Corps",s:8000,loss:3100,f:[.8,.05,.15],k:{2:[39.8496,-77.2440],3:[39.8456,-77.2426],4:[39.8300,-77.2360],5:[39.8292,-77.2366],8:[39.8262,-77.2352],9:[39.8290,-77.2366]}},
+ {id:"early",side:"c",corps:"e",cn:"Ewell's Corps",cc:"Ewell",cs:"Ewell",n:"Early",full:"Early's Division, Ewell's Second Corps",s:5500,loss:1480,f:[.35,.6,.05],k:{2:[39.8562,-77.2150],3:[39.8468,-77.2240],4:[39.8300,-77.2270],5:[39.8280,-77.2256],8:[39.8232,-77.2278],9:[39.8282,-77.2260]}},
+ {id:"johnson",side:"c",corps:"e",cn:"Ewell's Corps",cc:"Ewell",cs:"Ewell",n:"Johnson",full:"Edward Johnson's Division, Ewell's Second Corps",s:6400,loss:2000,f:[0,.45,.55],k:{4:[39.8332,-77.2200],5:[39.8256,-77.2110],8:[39.8186,-77.2168],10:[39.8216,-77.2120]}},
+ {id:"mclaws",side:"c",corps:"l",cn:"Longstreet's Corps",cc:"Longstreet",cs:"Longstreet",n:"McLaws",full:"McLaws's Division, Longstreet's First Corps",s:7200,loss:2290,f:[0,.97,.03],k:{5:[39.8200,-77.2640],6:[39.8000,-77.2566],7:[39.7996,-77.2472],8:[39.7996,-77.2496]}},
+ {id:"hood",side:"c",corps:"l",cn:"Longstreet's Corps",cc:"Longstreet",cs:"Longstreet",n:"Hood",full:"Hood's Division, Longstreet's First Corps (Law commanding after Hood was wounded)",s:7400,loss:2370,f:[0,.93,.07],k:{5:[39.8150,-77.2660],6:[39.7900,-77.2552],7:[39.7906,-77.2442]}},
+ {id:"pickett",side:"c",corps:"l",cn:"Longstreet's Corps",cc:"Longstreet",cs:"Longstreet",n:"Pickett",full:"Pickett's Division, Longstreet's First Corps",s:5500,loss:2900,f:[0,0,1],k:{9:[39.8150,-77.2582],10:[39.8106,-77.2496],11:[39.8116,-77.2386],12:[39.8110,-77.2512]}},
+ {id:"stuart",side:"c",corps:"cs",cn:"Stuart (cav.)",cc:"Cavalry Division",cs:"Cavalry",n:"Stuart",full:"Stuart's Cavalry Division",s:6600,loss:380,f:[0,.1,.9],k:{8:[39.8482,-77.1952],10:[39.8342,-77.1702]}}
+];
+
 (function(){
 "use strict";
 var $=function(s){return document.querySelector(s)};
@@ -1743,6 +1815,31 @@ function los(pos,eye,p,et,d){var n=Math.max(2,Math.ceil(d/30));
   for(var i=1;i<n;i++){var t=i/n;if(sample(pos.lat+(p.lat-pos.lat)*t,pos.lon+(p.lon-pos.lon)*t)&&_e>eye+(et+2-eye)*t+2)return false}return true}
 function isDark(){var t=document.documentElement.getAttribute("data-theme");return t?t==="dark":!!(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)}
 
+/* ---------- forces over time ---------- */
+var P1=[0,.25,.35,.8,1,1,1,1,1,1,1,1,1],P2=[0,0,0,0,0,0,.15,.75,1,1,1,1,1],P3=[0,0,0,0,0,0,0,0,0,.2,.25,.65,1];
+function unitPos(u,step){var p=null,seen=false;for(var i=0;i<=step;i++){if(u.k[i]!==undefined){p=u.k[i];seen=true}}return seen?p:null}
+function unitStr(u,step){return Math.round((u.s-u.loss*(u.f[0]*P1[step]+u.f[1]*P2[step]+u.f[2]*P3[step]))/100)*100}
+function fmtN(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,",")}
+function forces(step,corps){
+  var out=[],g={};
+  UNITS.forEach(function(u){var p=unitPos(u,step);if(!p)return;var n=unitStr(u,step);
+    if(!corps){out.push({id:u.id,side:u.side,name:u.n,sub:u.cs+" \u00b7 "+fmtN(n),lat:p[0],lon:p[1],n:n,u:u});return}
+    var k=u.side+u.corps,c=g[k]||(g[k]={id:"c-"+k,side:u.side,name:u.cn,cc:u.cc,lat:0,lon:0,n:0,corps:1,parts:[]});c.lat+=p[0]*n;c.lon+=p[1]*n;c.n+=n;c.parts.push(u.n)});
+  if(corps)Object.keys(g).forEach(function(k){var c=g[k];c.lat/=c.n;c.lon/=c.n;c.sub=fmtN(c.n)+" men";out.push(c)});
+  return out;
+}
+function totals(step){var a={u:0,c:0};UNITS.forEach(function(u){if(unitPos(u,step))a[u.side]+=unitStr(u,step)});return a}
+var OFFS=(function(){var o=[];for(var dy=-4;dy<=4;dy++)for(var dx=-2;dx<=2;dx++)o.push([dx,dy]);o.sort(function(a,b){return (a[0]*a[0]*9+a[1]*a[1])-(b[0]*b[0]*9+b[1]*b[1])});return o})();
+function declutter(list,toPx,w,h){ // moves labels to the nearest free spot; each item gets .px (label) and .at (true point)
+  var boxes=[];list.sort(function(a,b){return b.n-a.n});
+  list.forEach(function(f){var p=toPx(f),x=p[0],y=p[1];
+    for(var k=0;k<OFFS.length;k++){var cx=p[0]+OFFS[k][0]*(w+5),cy=p[1]+OFFS[k][1]*(h+5),hit=false;
+      for(var i=0;i<boxes.length;i++){if(Math.abs(boxes[i][0]-cx)<w+3&&Math.abs(boxes[i][1]-cy)<h+3){hit=true;break}}
+      if(!hit){x=cx;y=cy;break}}
+    boxes.push([x,y]);f.at=p;f.px=[x,y]});
+  return list;
+}
+
 /* Shaded relief with 20 ft contours, drawn once per theme. */
 var reliefCache={};
 function reliefCanvas(){
@@ -1762,7 +1859,7 @@ function reliefCanvas(){
 }
 
 /* Texture for the 3D model: relief plus roads, streams, troop positions and stop pins. */
-function texCanvas(phKey){
+function texCanvas(step){
   var S4=4,W=DEM.cols*S4,H=DEM.rows*S4,can=document.createElement("canvas");can.width=W*1.5;can.height=H*1.5;var g=can.getContext("2d");g.scale(1.5,1.5);
   g.drawImage(reliefCanvas(),0,0);
   function px(ll){return [(ll[1]-DEM.w)/(DEM.e-DEM.w)*W,(DEM.n-ll[0])/(DEM.n-DEM.s)*H]}
@@ -1780,13 +1877,19 @@ function texCanvas(phKey){
   BASE.hills.forEach(function(h){text([h[1],h[2]],h[0].toUpperCase(),muted,17)});
   BASE.ridges.forEach(function(r){text(r[2],r[0].toUpperCase(),muted,17)});
   text([39.8302,-77.2312],"GETTYSBURG",muted,19);
-  var ph=PH[phKey||S.phase]||{};
-  (ph.u||[]).forEach(function(l){line(l,U,8)});(ph.ud||[]).forEach(function(l){line(l,U,6,[4,12])});(ph.c||[]).forEach(function(l){line(l,C,8)});
-  (ph.ca||[]).forEach(function(l){line(l,C,5);head(l,C)});(ph.ua||[]).forEach(function(l){line(l,U,5,[8,10]);head(l,U)});
+  if(step==null)step=S.step;
+  if(step>0)UNITS.forEach(function(u){var a=unitPos(u,step-1),b=unitPos(u,step);if(!a||!b||(a[0]===b[0]&&a[1]===b[1]))return;var col=u.side==="u"?U:C;g.globalAlpha=.6;line([a,b],col,5);head([a,b],col);g.globalAlpha=1});
   P.forEach(function(p){if(p.k!=="stop")return;var q=px([p.lat,p.lon]);if(q[0]<0||q[0]>W||q[1]<0||q[1]>H)return;
     g.beginPath();g.arc(q[0],q[1],15,0,7);g.fillStyle=(!S.useGps&&p.id===S.here)?brass:(p.layer==="L"?U:ink);g.fill();g.lineWidth=2.5;g.strokeStyle=cv_card;g.stroke();
     g.fillStyle=cv_card;g.font="700 17px 'Barlow Condensed','Arial Narrow',Arial,sans-serif";g.textAlign="center";g.textBaseline="middle";g.fillText(p.num,q[0],q[1]+1)});
-  (ph.tx||[]).forEach(function(t){text(t.at,t.t,t.c==="u"?U:C,19,true)});
+  if(step>=0){g.textAlign="center";g.textBaseline="middle";
+    declutter(forces(step,false).filter(function(f){var q=px([f.lat,f.lon]);return q[0]>-40&&q[0]<W+40&&q[1]>-20&&q[1]<H+20}),function(f){return px([f.lat,f.lon])},106,38).forEach(function(f){
+      var col=f.side==="u"?U:C,x=f.px[0],y=f.px[1];
+      g.beginPath();g.moveTo(f.at[0],f.at[1]);g.lineTo(x,y);g.strokeStyle=col;g.lineWidth=2.5;g.stroke();
+      g.beginPath();g.arc(f.at[0],f.at[1],5,0,7);g.fillStyle=col;g.fill();
+      g.fillStyle=col;g.fillRect(x-53,y-19,106,38);g.strokeStyle=cv_card;g.lineWidth=2;g.strokeRect(x-53,y-19,106,38);
+      g.fillStyle="#fff";g.font="700 19px 'Barlow Condensed','Arial Narrow',Arial,sans-serif";g.fillText(f.name,x,y-7,100);
+      g.font="600 14px 'Barlow Condensed','Arial Narrow',Arial,sans-serif";g.fillText(f.sub,x,y+10,100)})}
   return can;
 }
 
@@ -1795,7 +1898,7 @@ var situCache={};
 function situPhase(p){if(!p.day||!p.day.length)return "none";if(p.id==="mcph"||p.id==="rrcut")return "d1a";return {1:"d1b",2:"d2",3:"d3"}[p.day[0]]}
 function situCanvas(p){
   if(!Z||!sample(p.lat,p.lon))return null;
-  var k=situPhase(p),key=k+(isDark()?"d":"l");if(!situCache[key])situCache[key]=texCanvas(k);
+  var k=situPhase(p),st={d1a:1,d1b:3,d2:7,d3:11}[k],key=k+(isDark()?"d":"l");if(st==null)st=-1;if(!situCache[key])situCache[key]=texCanvas(st);
   var src=situCache[key],W=src.width,H=src.height,cx=(p.lon-DEM.w)/(DEM.e-DEM.w)*W,cy=(DEM.n-p.lat)/(DEM.n-DEM.s)*H;
   var half=1.25*W/((DEM.e-DEM.w)*111.2*Math.cos(FIELD.lat*RAD)),hh=half*0.72;
   var sx=Math.max(0,Math.min(W-2*half,cx-half)),sy=Math.max(0,Math.min(H-2*hh,cy-hh));
@@ -1869,14 +1972,14 @@ function drawTerrain(W,H,pos,eye,hd,fov,on){
 /* ---------- state ---------- */
 var store={get:function(k,d){try{var v=localStorage.getItem("gb."+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
            set:function(k,v){try{localStorage.setItem("gb."+k,JSON.stringify(v))}catch(e){}}};
-var S={tab:store.get("tab","look"),here:store.get("here","angle"),done:store.get("done",{}),phase:store.get("phase","d1a"),
+var S={tab:store.get("tab","look"),here:store.get("here","angle"),done:store.get("done",{}),step:store.get("step",0),phase:"d1a",
        gps:null,gpsFar:false,useGps:false,watch:null,
        heading:270,raw:null,offset:0,sensor:false,absSeen:false,
        live:false,cam:false,pic:false,stream:null,fov:60,m3:false,layer:store.get("layer","B")};
 function layerOf(p){return p.layer||"B"}
 function tourOf(l){return STOPS.filter(function(p){return layerOf(p)===l})}
 if(!byId[S.here]||byId[S.here].k!=="stop")S.here="angle";
-if(!PH[S.phase])S.phase="d1a";
+if(!(S.step>=0&&S.step<TL.length))S.step=0;S.phase=TL[S.step].ph;
 if(["map","look","tour","brief"].indexOf(S.tab)<0)S.tab="look";
 
 function curPos(){return (S.useGps&&S.gps)?S.gps:byId[S.here]}
@@ -1910,7 +2013,7 @@ function openSheet(id){
   h+='<a class="btn ghost" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination='+p.lat+","+p.lon+'">Directions</a></div>';
   if(IMG[p.id]){h+='<div class="gal">';IMG[p.id].forEach(function(m){h+='<figure><img loading="lazy" src="'+m.f+'" width="'+m.w+'" height="'+m.h+'" alt="'+esc(m.c)+'"><figcaption><b>'+esc(m.y)+"</b>"+esc(m.c)+'<a href="'+m.u+'" target="_blank" rel="noopener">'+esc(m.cr)+" · Wikimedia Commons</a></figcaption></figure>"});h+="</div>"}
   var sk=situPhase(p),hasSitu=!!(Z&&sample(p.lat,p.lon));
-  if(hasSitu)h+='<figure class="situ"><div id="situBox"></div><figcaption><b>Map</b>'+(PH[sk]?"Where the armies stood: "+PH[sk].label+". ":"The ground around this stop. ")+"Blue is Union, red Confederate. The ring marks this stop. North is up; the window is about a mile and a half wide.</figcaption></figure>";
+  if(hasSitu)h+='<figure class="situ"><div id="situBox"></div><figcaption><b>Map</b>'+(PH[sk]?"Where the divisions stood on "+TL[{d1a:1,d1b:3,d2:7,d3:11}[sk]].d+", "+TL[{d1a:1,d1b:3,d2:7,d3:11}[sk]].t+", with estimated strength. ":"The ground around this stop. ")+"Blue is Union, red Confederate. The ring marks this stop. North is up; the window is about a mile and a half wide.</figcaption></figure>";
   if(p.views&&p.views.length){
     h+='<h3>From here, look</h3><ul class="looks">';
     p.views.forEach(function(v){var b=viewBrg(p,v);
@@ -1923,9 +2026,9 @@ function openSheet(id){
   if(p.k!=="stop"||S.useGps)h+='<p class="lead">'+fmtD(dist(pos,p))+" "+pt(brg(pos,p))+" of "+(S.useGps?"you":esc(byId[S.here].n))+".</p>";
   var body=$("#sheetBody");body.innerHTML=h;body.scrollTop=0;
   if(hasSitu){try{var sc=situCanvas(p);if(sc)$("#situBox").appendChild(sc)}catch(e){}}
-  var nav=$("#sheetNav"),TL=tourOf(layerOf(p)),i=p.k==="stop"?TL.indexOf(p):-1,nh="";
-  if(i>=0){if(i>0)nh+='<button class="btn ghost" data-act="go" data-id="'+TL[i-1].id+'">\u2190 Back</button>';
-    if(i<TL.length-1)nh+='<button class="btn" data-act="next" data-cur="'+p.id+'" data-id="'+TL[i+1].id+'">Next: '+esc(TL[i+1].n)+' \u2192</button>'}
+  var nav=$("#sheetNav"),TRL=tourOf(layerOf(p)),i=p.k==="stop"?TRL.indexOf(p):-1,nh="";
+  if(i>=0){if(i>0)nh+='<button class="btn ghost" data-act="go" data-id="'+TRL[i-1].id+'">\u2190 Back</button>';
+    if(i<TRL.length-1)nh+='<button class="btn" data-act="next" data-cur="'+p.id+'" data-id="'+TRL[i+1].id+'">Next: '+esc(TRL[i+1].n)+' \u2192</button>'}
   nav.innerHTML=nh;nav.hidden=!nh;
   $("#sheet").classList.add("on");
 }
@@ -1940,17 +2043,17 @@ function setHere(id,keepGps){
 
 /* ---------- tour list ---------- */
 function renderTour(){
-  var pos=curPos(),h="",TL=tourOf(S.layer);
+  var pos=curPos(),h="",TRL=tourOf(S.layer);
   document.querySelectorAll("#layers .chip").forEach(function(c){c.classList.toggle("on",c.dataset.l===S.layer)});
   $("#tourLead").textContent=S.layer==="L"?"Lincoln's 24 hours in Gettysburg, in the order he lived them. Stops L1 to L3 are in town; L4 to L7 are a ten-minute walk inside the cemetery.":"All 22 stops in driving order, following the Park Service's auto tour. Tap any stop to read it.";
-  TL.forEach(function(p){
+  TRL.forEach(function(p){
     var tags=(p.star?'<span class="tag star">Must see</span>':"")+(p.opt?'<span class="tag">Optional</span>':"")+(p.nps?'<span class="tag">NPS '+p.nps+"</span>":"")+
       (S.useGps?'<span class="tag">'+fmtD(dist(pos,p))+"</span>":"");
     h+='<li class="'+(p.opt?"opt ":"")+(S.done[p.id]?"done":"")+'"><span class="num">'+p.num+'</span><button class="open" data-id="'+p.id+'">'+(IMG[p.id]?'<img class="th" loading="lazy" src="'+IMG[p.id][0].f+'" alt="">':"")+'<h3>'+esc(p.n)+"</h3><p>"+tags+esc(p.when)+"</p><p>"+esc(p.s)+
       '</p></button><input type="checkbox" id="done-'+p.id+'" data-id="'+p.id+'" aria-label="Visited '+esc(p.n)+'"'+(S.done[p.id]?" checked":"")+"></li>";
   });
   $("#tourList").innerHTML=h;
-  var main=TL.filter(function(p){return !p.opt}),nx=null,k=0;for(var q=0;q<main.length;q++){if(!S.done[main[q].id]){nx=main[q];k=q;break}}
+  var main=TRL.filter(function(p){return !p.opt}),nx=null,k=0;for(var q=0;q<main.length;q++){if(!S.done[main[q].id]){nx=main[q];k=q;break}}
   $("#tourNow").innerHTML=nx?'<div class="next"><div class="when">'+(k===0?"Start here":"Next stop")+" · "+(k+1)+" of "+main.length+(S.useGps?" · "+fmtD(dist(pos,nx))+" away":"")+"</div>"+(IMG[nx.id]?'<img loading="lazy" src="'+IMG[nx.id][0].f+'" alt="">':"")+"<h2>"+esc(nx.n)+"</h2><p>"+esc(SUM[nx.id][0])+
     '</p><div class="acts"><button class="btn open" data-id="'+nx.id+'">Open this stop</button><a class="btn ghost" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination='+nx.lat+","+nx.lon+'">Drive there</a></div></div>':
     '<div class="next"><h2>Tour complete</h2><p>You have seen every stop. The optional stops and the reading list are still here.</p></div>';
@@ -1958,7 +2061,7 @@ function renderTour(){
 
 /* ---------- map ---------- */
 var reliefOv=null,map=null,baseLayer=null,phaseLayer=null,meMarker=null,meAcc=null,pinEls={},mapFitted=false,tilesOk=false;
-function fitField(){if(!map)return;var el=$("#map");if(!el.clientWidth)return;map.fitBounds([[39.7845,-77.2640],[39.8500,-77.2090]]);mapFitted=true}
+function fitField(){if(!map)return;var el=$("#map");if(!el.clientWidth)return;map.fitBounds([[39.7845,-77.2640],[39.8500,-77.2090]]);mapFitted=true;drawUnits()}
 function lbl(at,text,cls,z){return L.marker(at,{interactive:false,keyboard:false,zIndexOffset:z||0,icon:L.divIcon({className:"",html:'<div class="maplbl '+(cls||"")+'">'+esc(text)+"</div>",iconSize:[0,0]})})}
 function arrow(pts,color,dash){
   var out=[L.polyline(pts,{color:color,weight:4,opacity:.95,dashArray:dash||null,interactive:false})];
@@ -1977,18 +2080,42 @@ function drawSchematic(){
   BASE.streams.forEach(function(r){L.polyline(r[1],{color:water,weight:2,opacity:.85,interactive:false}).addTo(baseLayer);lbl(r[2],r[0],"water"+(r[3]?" zl":"")).addTo(baseLayer)});
   BASE.roads.forEach(function(r){L.polyline(r[1],{color:road,weight:3,opacity:.85,interactive:false}).addTo(baseLayer);if(r[2])lbl(r[2],r[0]).addTo(baseLayer)});
 }
-function drawPhase(){
-  document.querySelectorAll("#phases .chip").forEach(function(c){c.classList.toggle("on",c.dataset.ph===S.phase)});
-  var ph=PH[S.phase];$("#phcap").textContent=ph.cap;
+var unitLayer=null,leadLayer=null,unitMk={},playT=null;
+function unitInfo(f){
+  if(f.corps){toast(f.name+" ("+f.cc+"): about "+fmtN(f.n)+" men on the field now. Divisions: "+f.parts.join(", ")+". Zoom in to see each one.");return}
+  var u=f.u;toast(u.full+". About "+fmtN(u.s)+" engaged, about "+fmtN(Math.round(u.loss/100)*100)+" lost in the battle. On the field now: about "+fmtN(f.n)+".")}
+function drawUnits(){
+  if(!map||!unitLayer)return;
+  var corps=map.getZoom()<13.6,w=corps?112:104,h=corps?34:38,U=cv("--union"),C=cv("--conf"),used={};
+  var list=declutter(forces(S.step,corps),function(f){var p=map.latLngToContainerPoint([f.lat,f.lon]);return [p.x,p.y]},w,h);
+  if(unitLayer._lvl!==corps){unitLayer.clearLayers();unitMk={};unitLayer._lvl=corps}
+  leadLayer.clearLayers();phaseLayer.clearLayers();
+  if(S.step>0)UNITS.forEach(function(u){var a=unitPos(u,S.step-1),b=unitPos(u,S.step);if(!a||!b||(a[0]===b[0]&&a[1]===b[1]))return;
+    arrow([a,b],u.side==="u"?U:C).forEach(function(x){x.setStyle({opacity:.55,fillOpacity:.55});x.addTo(phaseLayer)})});
+  list.forEach(function(f){
+    var col=f.side==="u"?U:C,ll=map.containerPointToLatLng(f.px),m=unitMk[f.id],
+        html='<div class="unit '+f.side+(f.corps?" corps":"")+'"><b>'+esc(f.name)+"</b><i>"+esc(f.sub)+"</i></div>";
+    if(!m){m=unitMk[f.id]=L.marker(ll,{zIndexOffset:900,icon:L.divIcon({className:"unitm",html:html,iconSize:[w,h],iconAnchor:[w/2,h/2]})}).addTo(unitLayer);
+      m.on("click",function(){unitInfo(m._f)})}
+    else{m.setLatLng(ll);var el=m.getElement();if(el&&el.innerHTML!==html)el.innerHTML=html}
+    m._f=f;used[f.id]=1;
+    L.circleMarker([f.lat,f.lon],{radius:4,color:"#fff",weight:1.5,fillColor:col,fillOpacity:1,interactive:false}).addTo(leadLayer);
+    if(Math.abs(f.px[0]-f.at[0])+Math.abs(f.px[1]-f.at[1])>6)L.polyline([[f.lat,f.lon],ll],{color:col,weight:1.5,opacity:.85,interactive:false}).addTo(leadLayer)});
+  Object.keys(unitMk).forEach(function(id){if(!used[id]){unitLayer.removeLayer(unitMk[id]);delete unitMk[id]}});
+}
+function drawStep(){
+  var st=TL[S.step],tt=totals(S.step);S.phase=st.ph;
+  $("#tlWhen").textContent=st.d+", "+st.t;$("#tlRange").value=S.step;$("#phcap").textContent=st.cap;
+  $("#tlTotals").innerHTML='On the field: <span class="u">Union '+fmtN(tt.u)+'</span> \u00b7 <span class="c">Confederate '+fmtN(tt.c)+"</span>";
+  $("#tlPrev").disabled=S.step===0;$("#tlNext").disabled=S.step===TL.length-1;
   if(S.m3)retex3d();
-  if(!map)return;
-  phaseLayer.clearLayers();var U=cv("--union"),C=cv("--conf");
-  (ph.u||[]).forEach(function(l){L.polyline(l,{color:U,weight:6,opacity:.95,interactive:false}).addTo(phaseLayer)});
-  (ph.ud||[]).forEach(function(l){L.polyline(l,{color:U,weight:5,opacity:.95,dashArray:"3 9",interactive:false}).addTo(phaseLayer)});
-  (ph.c||[]).forEach(function(l){L.polyline(l,{color:C,weight:6,opacity:.95,interactive:false}).addTo(phaseLayer)});
-  (ph.ca||[]).forEach(function(l){arrow(l,C).forEach(function(x){x.addTo(phaseLayer)})});
-  (ph.ua||[]).forEach(function(l){arrow(l,U,"6 8").forEach(function(x){x.addTo(phaseLayer)})});
-  (ph.tx||[]).forEach(function(t){lbl(t.at,t.t,t.c,1200).addTo(phaseLayer)});
+  drawUnits();
+}
+function setStep(n){S.step=Math.max(0,Math.min(TL.length-1,n));store.set("step",S.step);drawStep()}
+function play(on){
+  clearInterval(playT);playT=null;$("#tlPlay").textContent=on?"Pause":"Play";$("#tlPlay").classList.toggle("on",!!on);
+  if(!on)return;if(S.step>=TL.length-1)setStep(0);
+  playT=setInterval(function(){if(S.step>=TL.length-1){play(false);return}setStep(S.step+1)},1900);
 }
 function markHere(){Object.keys(pinEls).forEach(function(id){pinEls[id].classList.toggle("here",!S.useGps&&id===S.here)});if(S.m3)retex3d()}
 function initMap(){
@@ -1997,13 +2124,13 @@ function initMap(){
   map.attributionControl.setPrefix("");
   L.control.zoom({position:"bottomright"}).addTo(map);
   map.setView([FIELD.lat,FIELD.lon],13);
-  baseLayer=L.layerGroup().addTo(map);phaseLayer=L.layerGroup().addTo(map);
+  baseLayer=L.layerGroup().addTo(map);phaseLayer=L.layerGroup().addTo(map);leadLayer=L.layerGroup().addTo(map);unitLayer=L.layerGroup().addTo(map);
   if(Z){try{map.createPane("relief");map.getPane("relief").style.zIndex=250;
     reliefOv=L.imageOverlay(reliefCanvas().toDataURL("image/jpeg",0.85),[[DEM.s,DEM.w],[DEM.n,DEM.e]],{pane:"relief",interactive:false}).addTo(map)}catch(e){reliefOv=null}}
   drawSchematic();
   try{ // real street tiles when the page is allowed to load them; the schematic stays if it is not
     var tiles=L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap contributors"});
-    tiles.once("tileload",function(){tilesOk=true;baseLayer.clearLayers();if(reliefOv){reliefOv.setOpacity(0.55);var im=reliefOv.getElement();if(im)im.style.mixBlendMode="multiply"}$("#mapnote").textContent="Positions approximate. Tap a pin."});
+    tiles.once("tileload",function(){tilesOk=true;baseLayer.clearLayers();if(reliefOv){reliefOv.setOpacity(0.55);var im=reliefOv.getElement();if(im)im.style.mixBlendMode="multiply"}$("#mapnote").textContent="Estimates. Tap a unit. Zoom in for divisions."});
     tiles.addTo(map);
   }catch(e){}
   P.forEach(function(p){
@@ -2012,8 +2139,9 @@ function initMap(){
     m.on("click",function(){openSheet(p.id)});
     if(stop){var el=m.getElement();if(el)pinEls[p.id]=el.firstChild}
   });
-  map.on("zoomend",function(){$("#map").classList.toggle("z-names",map.getZoom()>=14.25)});
-  drawPhase();markHere();fitField();
+  map.on("zoomstart",function(){$("#map").classList.add("nozt")});
+  map.on("zoomend",function(){$("#map").classList.toggle("z-names",map.getZoom()>=14.25);drawUnits();setTimeout(function(){$("#map").classList.remove("nozt")},80)});
+  markHere();fitField();$("#map").classList.add("nozt");drawStep();setTimeout(function(){$("#map").classList.remove("nozt")},80);
 }
 function showMe(){
   if(!map||!S.gps||S.gpsFar)return;
@@ -2177,7 +2305,10 @@ function updateSit(pos,hd){
 /* ---------- wiring ---------- */
 function init(){
   document.querySelector("nav.tabs").addEventListener("click",function(e){var b=e.target.closest("button");if(b)setTab(b.dataset.tab)});
-  $("#phases").addEventListener("click",function(e){var b=e.target.closest(".chip");if(!b)return;S.phase=b.dataset.ph;store.set("phase",S.phase);drawPhase()});
+  $("#tlRange").addEventListener("input",function(e){play(false);setStep(+e.target.value)});
+  $("#tlPrev").addEventListener("click",function(){play(false);setStep(S.step-1)});
+  $("#tlNext").addEventListener("click",function(){play(false);setStep(S.step+1)});
+  $("#tlPlay").addEventListener("click",function(){play(!playT)});
   $("#locate").addEventListener("click",function(){
     if(S.gps&&!S.gpsFar&&map){map.setView([S.gps.lat,S.gps.lon],16)}
     else if(S.gps&&S.gpsFar)toast("You are "+fmtD(dist(S.gps,FIELD))+" from the battlefield. The dot appears once you are on the field.");
@@ -2239,8 +2370,8 @@ function init(){
 
   buildLook();
   var p=byId[S.here];S.heading=viewBrg(p,p.views[0]);
-  syncHereSelect();renderTour();initMap();
-  try{new MutationObserver(function(){if(reliefOv)reliefOv.setUrl(reliefCanvas().toDataURL("image/jpeg",0.85));if(map){drawSchematic();drawPhase()}if(S.m3)retex3d()}).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]})}catch(e){}
+  syncHereSelect();renderTour();initMap();if(!map)drawStep();
+  try{new MutationObserver(function(){situCache={};if(reliefOv)reliefOv.setUrl(reliefCanvas().toDataURL("image/jpeg",0.85));if(map){drawSchematic()}drawStep()}).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]})}catch(e){}
   setTab(S.tab);
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
