@@ -673,20 +673,20 @@ svg.leaflet-image-layer.leaflet-interactive path {
 :root{
   /* Layout: one-screen phone app. Survey-map paper, Union blue and Confederate red as on the 1860s Bachelder maps, brass for "you". */
   --paper:#EDF0EA; --card:#FFFFFF; --ink:#17211B; --muted:#55625A; --line:#C7D0C6;
-  --union:#1D4F91; --conf:#B4281E; --brass:#8A6410; --field:#DDE6D4; --water:#5E8FB0; --road:#8B948B;
+  --union:#1D4F91; --conf:#B4281E; --brass:#8A6410; --ike:#2F6B3A; --field:#DDE6D4; --water:#5E8FB0; --road:#8B948B;
   --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
   --body:"Barlow","Helvetica Neue",Arial,sans-serif;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --paper:#111714; --card:#1A231F; --ink:#E8EDE7; --muted:#A2AEA5; --line:#2E3A33;
-    --union:#82B1EF; --conf:#F08A80; --brass:#E0B450; --field:#1C2820; --water:#5F93B8; --road:#6F7A72;
+    --union:#82B1EF; --conf:#F08A80; --brass:#E0B450; --ike:#8FCB98; --field:#1C2820; --water:#5F93B8; --road:#6F7A72;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --paper:#111714; --card:#1A231F; --ink:#E8EDE7; --muted:#A2AEA5; --line:#2E3A33;
-  --union:#82B1EF; --conf:#F08A80; --brass:#E0B450; --field:#1C2820; --water:#5F93B8; --road:#6F7A72;
+  --union:#82B1EF; --conf:#F08A80; --brass:#E0B450; --ike:#8FCB98; --field:#1C2820; --water:#5F93B8; --road:#6F7A72;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -903,6 +903,38 @@ ol.tour img.th{float:right;width:68px;height:68px;object-fit:cover;border-radius
 .unit.corps{padding-top:3px} .unit.corps b{font-size:14.5px} .unit.corps i{font-size:11.5px}
 @media (prefers-reduced-motion: reduce){.unitm{transition:none}}
 
+.pin.ike{background:var(--ike);color:#fff;font-size:11px}
+:root[data-theme="dark"] .pin.ike{color:#111}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pin.ike{color:#111}}
+.inside{margin:14px 0;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.inside h3{margin:0 0 4px}
+.inside p{margin:0 0 10px;color:var(--muted)}
+.inside details{margin-top:10px}
+.rooms{margin:8px 0 0;padding-left:22px}
+.rooms li{margin:0 0 10px;line-height:1.45}
+.rooms b{display:block;font:600 17px var(--display);letter-spacing:.02em}
+.rooms i{display:block;font-style:normal;font-size:13px;color:var(--muted);margin-bottom:2px}
+.rooms a{white-space:nowrap}
+
+#ovl{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none;opacity:.65}
+#ovl[hidden],#ovlbar[hidden],#ovlCtl[hidden],#ovlBtn[hidden]{display:none}
+#ovlbar{position:absolute;left:0;right:0;bottom:0;background:rgba(12,18,15,.82);padding:8px 10px 10px;display:flex;flex-direction:column;gap:8px}
+#ovlCap{font-size:13px;line-height:1.3;color:#e6ece6}
+#ovlCap b{color:#FFD35C;margin-right:6px;font:600 14px var(--display);letter-spacing:.04em;text-transform:uppercase}
+#ovlThumbs{display:flex;gap:6px;overflow-x:auto;touch-action:pan-x;scrollbar-width:none}
+#ovlThumbs::-webkit-scrollbar{display:none}
+#ovlThumbs button{flex:none;padding:0;border:2px solid transparent;border-radius:6px;background:none;line-height:0}
+#ovlThumbs button.on{border-color:#FFD35C}
+#ovlThumbs img{height:58px;width:auto;border-radius:4px;display:block}
+#ovlCtl{display:flex;gap:10px;align-items:center}
+#ovlCtl input{flex:1;accent-color:#FFD35C;touch-action:pan-x}
+#scene.ovl #terrNote{display:none}
+
+#ovlBtn{position:absolute;left:8px;bottom:8px}
+.ovlhead{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+.ovlhead .gbtn{flex:none;padding:4px 10px;font-size:14px}
+#scene.ovl #labels{display:none}
+
 </style>
 </head>
 <body>
@@ -927,6 +959,7 @@ ol.tour img.th{float:right;width:68px;height:68px;object-fit:cover;border-radius
     <canvas id="terr"></canvas>
     <video id="vid" playsinline muted autoplay></video>
     <img class="photo" id="pic" alt="">
+    <img id="ovl" alt="" hidden>
     <div id="labels"></div>
     <div id="tape" aria-hidden="true"></div>
     <div id="heading">W 270°</div>
@@ -939,6 +972,8 @@ ol.tour img.th{float:right;width:68px;height:68px;object-fit:cover;border-radius
       <button class="gbtn" id="sunbtn">Facing the sun</button>
       <button class="gbtn" id="recal" hidden>Reset compass</button>
     </div>
+    <button class="gbtn" id="ovlBtn" hidden>Then &amp; inside</button>
+    <div id="ovlbar" hidden><div class="ovlhead"><div id="ovlCap">Tap a picture to lay it over the view.</div><button class="gbtn" id="ovlX">Close</button></div><div id="ovlThumbs"></div><div id="ovlCtl" hidden><input type="range" id="ovlOp" min="15" max="100" value="65" aria-label="How strongly the picture shows"><button class="gbtn" id="ovlOff">Hide picture</button></div></div>
   </div>
   <div id="sit">
     <div class="row"><h2 id="sitTitle"></h2><select id="here" aria-label="Where you are standing"></select></div>
@@ -950,7 +985,7 @@ ol.tour img.th{float:right;width:68px;height:68px;object-fit:cover;border-radius
 
 <section class="view" id="v-tour" aria-label="Tour stops">
   <div class="scroll">
-    <div class="chips" id="layers" role="group" aria-label="Which tour"><button class="chip on" data-l="B">The battle, July 1863</button><button class="chip" data-l="L">Lincoln, November 1863</button></div>
+    <div class="chips" id="layers" role="group" aria-label="Which tour"><button class="chip on" data-l="B">The battle, July 1863</button><button class="chip" data-l="L">Lincoln, November 1863</button><button class="chip" data-l="E">Eisenhower's farm</button></div>
     <div id="tourNow"></div>
     <p class="lead" id="tourLead"></p>
     <ol class="tour" id="tourList"></ol>
@@ -959,7 +994,7 @@ ol.tour img.th{float:right;width:68px;height:68px;object-fit:cover;border-radius
 
 <section class="view" id="v-brief" aria-label="Briefing">
   <div class="scroll prose">
-    <div class="chips jump" id="jump"><button class="chip" data-j="before">Before you go</button><button class="chip" data-j="plan">Saturday</button><button class="chip" data-j="story">The battle</button><button class="chip" data-j="deep">Deep dive</button><button class="chip" data-j="books">Reading</button><button class="chip" data-j="srcs">Sources</button></div>
+    <div class="chips jump" id="jump"><button class="chip" data-j="before">Before you go</button><button class="chip" data-j="plan">Saturday</button><button class="chip" data-j="story">The battle</button><button class="chip" data-j="deep">Deep dive</button><button class="chip" data-j="ike">Eisenhower</button><button class="chip" data-j="books">Reading</button><button class="chip" data-j="srcs">Sources</button></div>
 
     <h2 id="before">Before you go</h2>
     <p class="lead">Ten minutes of reading that makes the day make sense: what the war was about, why this battle matters, and why people have kept coming here for a hundred and sixty years.</p>
@@ -997,6 +1032,7 @@ ol.tour img.th{float:right;width:68px;height:68px;object-fit:cover;border-radius
       <li>Climb the three towers: Oak Ridge, Warfield Ridge and Culp's Hill. They show you the whole field at once.</li>
       <li>Bring a battery pack. Camera, GPS and cold weather drain a phone fast. Open this guide on wifi before you leave so it is loaded.</li>
       <li>Restrooms are at the Visitor Center. The park's comfort stations are seasonal and close for winter in mid-November.</li>
+      <li>Eisenhower's farm is half a mile from stop 10 and takes about an hour. It has its own tour and its own section below, <b>Eisenhower's farm</b>, which says how to fit it in.</li>
       <li>East Cavalry Field (stop A) is a 15-minute drive each way. Skip it unless you start at first light and keep to the clock.</li>
     </ul>
 
@@ -1136,6 +1172,57 @@ ol.tour img.th{float:right;width:68px;height:68px;object-fit:cover;border-radius
     <p><b>The second consecration.</b> What happened next is the part most visitors miss. McConaughy's Gettysburg Battlefield Memorial Association began buying the Union lines in 1864. Veterans covered them with regimental monuments in the 1880s. Congress made the field a national military park in 1895 and began marking the Confederate positions too. At the fiftieth anniversary in 1913 more than 50,000 veterans of both armies camped here and shook hands across the wall at the Angle. The first Confederate state monument, Virginia's, went up in 1917.</p>
     <p>David Blight's <i>Race and Reunion</i> is the essential reading on this. The field was consecrated a second time as a shrine to the shared courage of white soldiers on both sides, and that reconciliation was bought by leaving out the cause of the war and the people it freed. Lincoln's consecration was about equality. The veterans' was about valour. The monuments you will walk among on Saturday belong almost entirely to the second. The Lincoln tour's last stop, the cemetery where the town's Black veterans had to be buried, is where the two meet.</p>
 
+    <h2 id="ike">Eisenhower's farm</h2>
+    <p class="lead">A second president is tied to this ground. Dwight Eisenhower's only home sits just behind the Confederate line of July 2, half a mile west of the Warfield Ridge tower. It is a separate national historic site, it is free, and it has its own tour in this guide: open <b>Tour</b> and choose <b>Eisenhower's farm</b>.</p>
+    <h3>Who he was, in a paragraph</h3>
+    <p>Born in Texas in 1890 and raised in Abilene, Kansas, in a family with no money. West Point, class of 1915. He spent the First World War training tank crews at Gettysburg and never got to France. Twenty years as a staff officer followed, under Fox Conner, Pershing and MacArthur, and he was still a lieutenant colonel at the start of 1941. Then, in three years, he commanded the landings in North Africa and Italy and, as Supreme Commander, the invasion of Normandy on June 6, 1944, and the defeat of Germany in the west. After the war he was Army chief of staff, president of Columbia University and the first commander of NATO. He was elected president in 1952 and again in 1956. In office he ended the fighting in Korea, built the interstate highways, sent the 101st Airborne to enforce school desegregation at Little Rock, created NASA, and kept the country out of a shooting war with the Soviet Union for eight years. He left with a warning about the military-industrial complex, and came here.</p>
+    <h3>Four arrivals in Gettysburg</h3>
+    <ul>
+      <li><b>1915.</b> A cadet on his class's staff ride, studying the battle on the ground.</li>
+      <li><b>1918.</b> A captain of 27 commanding Camp Colt, the Army's tank school, on the fields of Pickett's Charge. He had more than 10,000 men, almost no tanks, and in the autumn an influenza epidemic that killed well over a hundred of them. The war ended a week before he was due to sail. He and Mamie, newly married with a baby, remembered the town fondly all the same.</li>
+      <li><b>1950.</b> A five-star general looking for somewhere to retire. They bought a run-down farm of 189 acres. Then came NATO and the presidency, and for ten years it was a weekend house, a place to recover from a heart attack, and a tool of diplomacy.</li>
+      <li><b>1961.</b> Home for good, on the day Kennedy was inaugurated. He farmed, painted, wrote his memoirs at an office in the college, and showed visitors round the battlefield. He died in 1969. Mamie lived here until 1979.</li>
+    </ul>
+    <h3>The house</h3>
+    <p>It is the only house the Eisenhowers ever owned, after dozens of Army moves. They meant to renovate an old brick farmhouse and found a rotting eighteenth-century log house inside the brick, so nearly all of it was rebuilt between 1953 and 1955, to Mamie's plans. It is comfortable and not grand: eight bedrooms, a formal living room they hardly used, and a glassed-in porch where they ate off trays in front of the television. The Park Service received it furnished, so what you see is theirs: her pink bathroom, his westerns, his paintings, the desk he signed bills at in 1955.</p>
+    <h3>Why a farm mattered in the Cold War</h3>
+    <p>Camp David is fifteen miles away over the mountain. Eisenhower's habit was to hold the formal talks there and then fly his guest here, walk him through the cattle barns, and sit him on the porch with the family, where he could size him up. Nehru, Adenauer, Churchill and de Gaulle all had the treatment. So, on September 26, 1959, did Nikita Khrushchev, in the middle of a deadlock over Berlin. He met the grandchildren, admired the Angus and invited the family to Moscow, and the crisis eased for a few months. The U-2 shot down in May 1960 ended that. Stops E3 and E8 tell it on the spot.</p>
+    <h3>What Ike thought of the battle</h3>
+    <p>He had studied it as a cadet, drilled troops on it, and lived beside it, and he gave battlefield tours to anyone who asked, among them Montgomery in 1957, de Gaulle in 1960 and a busload of congressmen in 1961. His verdicts, as the Park Service records them: Lee was a great man who lost the battle himself, by poor coordination and by the assault of July 3, which Eisenhower could not account for. Meade deserved more credit than he got. Sickles deserved none. Stuart put his own glory first. He admired Hancock. Above all of them he put Lincoln. When Montgomery told reporters in 1957 that both Lee and Meade should have been sacked, Eisenhower laughed it off in front of the reporters and then had to answer for it to Southern newspapers.</p>
+    <p>On November 19, 1963, he stood in the National Cemetery and gave the address for the centennial of Lincoln's. Three days later Kennedy was shot, and almost nobody remembers that he spoke.</p>
+    <h3>On Saturday</h3>
+    <ul>
+      <li><b>Open:</b> the grounds are open every day from sunrise to sunset and cost nothing. On the 14th sunset is about 4:50 PM.</li>
+      <li><b>The house will almost certainly be closed.</b> In 2026 the Park Service ran home tours Thursday to Monday from May 28 to October 26, with special Christmas tours in December. November 14 falls in the gap. Check <a href="https://www.nps.gov/eise/planyourvisit/hours.htm" target="_blank" rel="noopener">the site's hours page</a> on Friday. If it is shut, stop E2 has a room-by-room tour to read on the lawn and a link to walk the rooms in 3D on your phone.</li>
+      <li><b>Getting in:</b> you drive to it. The farm lane leaves the Emmitsburg Road just south of the point where Confederate Avenue crosses it, between stops 10 and 11 of the battle tour. Tap <b>Directions</b> on stop E1 for the visitor parking, which is gravel and small. Visitors report that phone maps sometimes send you in by Red Rock Road, which is the way out.</li>
+      <li><b>How long:</b> the loop E1 to E8 is about three-quarters of a mile on level paths and takes an hour. A half-hour version is E1 to E5.</li>
+      <li><b>Fitting it in:</b> the battle tour already uses all ten hours of daylight. The farm fits best straight after Warfield Ridge (stop 10), at about 10:45. To pay for it, skip the optional stops and one or two unstarred ones, or start the day at first light. The other choice is Sunday morning.</li>
+      <li><b>Facilities:</b> restrooms and a bookstore are at the reception center by the barn, but may be shut out of season. Use the Visitor Center first. There is no food.</li>
+      <li><b>The date:</b> November 14 is Mamie Eisenhower's birthday, her 130th. It is also the day, in 1955, that the president arrived here from hospital to recover, with the town band playing for her in the square.</li>
+    </ul>
+    <h3>Things to do there</h3>
+    <ol>
+      <li>Walk the loop with the Eisenhower tour, E1 to E8.</li>
+      <li>On the lawn east of the house, open stop E2 and go through the rooms one at a time, looking at the windows they belong to. If you have a signal, open the 3D walk-through.</li>
+      <li>Find the two brickworks on the house: the rougher, older brick at the kitchen end is what is left of the farmhouse they bought.</li>
+      <li>Open <b>Camera</b> at the putting green and turn all the way round. The labels pick out the house, the barn, the Warfield Ridge tower on the Confederate line, the Round Tops and, far to the south-west, Camp David.</li>
+      <li>Look through the window of the Secret Service office on the end of the barn.</li>
+      <li>Walk down to Farm 2 for the Angus and the show barn.</li>
+      <li>If you have ten spare minutes, walk east to the skeet range. You are 400 yards behind the line Longstreet's corps attacked from, looking at it from the side nobody visits.</li>
+      <li>Later, on the Emmitsburg Road, stop at the Camp Colt pine and tablet (E9), and in town look at his office at 300 Carlisle Street (E10).</li>
+    </ol>
+    <h3>The look-around, here and at home</h3>
+    <p>On the farm, <b>Camera</b> works as it does on the battlefield: hold the phone up and the names sit over what you are looking at. Away from the farm, pick any Eisenhower stop from the list in Camera and drag the picture to turn. You get the drawn ground from that spot with the same labels, which is a fair rehearsal. For the inside of the house the Park Service and Google have a full 3D walk-through, linked from stop E2.</p>
+    <h3>Read or watch before you go</h3>
+    <ul>
+      <li>Dwight D. Eisenhower, <i>At Ease: Stories I Tell to Friends</i> (1967). Written at the farm. The chapters on Camp Colt and on buying and rebuilding the house are the first-hand account of this place, and it is the most readable thing he wrote.</li>
+      <li>His farewell address of January 17, 1961, given three days before he moved here. It runs about a quarter of an hour, and the National Archives and the Eisenhower Library both have the film and the text.</li>
+      <li>His remarks at the centennial of the Gettysburg Address, November 19, 1963, held by the Eisenhower Presidential Library. Two pages.</li>
+      <li>The Park Service's lesson <a href="https://www.nps.gov/articles/000/thaw-in-the-cold-war-eisenhower-and-khrushchev-at-gettysburg-teaching-with-historic-places.htm" target="_blank" rel="noopener">"Thaw in the Cold War: Eisenhower and Khrushchev at Gettysburg,"</a> which prints John Eisenhower's and Khrushchev's own accounts of the visit.</li>
+      <li>The Park Service's account of <a href="https://www.nps.gov/articles/000/montgomerys-visit.htm" target="_blank" rel="noopener">Eisenhower and Montgomery on the battlefield in 1957</a>.</li>
+      <li>One biography: Jean Edward Smith, <i>Eisenhower in War and Peace</i> (2012), or William I. Hitchcock, <i>The Age of Eisenhower</i> (2018), for the presidency. Susan Eisenhower's <i>How Ike Led</i> (2020) is a granddaughter's view from inside this house.</li>
+    </ul>
+
     <h2 id="books">Read before Saturday</h2>
     <h3>If you have one evening</h3>
     <ol>
@@ -1225,6 +1312,16 @@ ol.tour img.th{float:right;width:68px;height:68px;object-fit:cover;border-radius
       <li>National Park Service, Gettysburg National Military Park: <a href="https://www.nps.gov/gett/planyourvisit/conditions.htm" target="_blank" rel="noopener">hours and conditions</a>, <a href="https://home.nps.gov/gett/learn/photosmultimedia/virtualtour.htm" target="_blank" rel="noopener">virtual tour</a>, and the auto tour whose stop numbers this guide uses.</li>
       <li>American Battlefield Trust: <a href="https://www.battlefields.org/learn/civil-war/battles/battle-gettysburg-facts-summary" target="_blank" rel="noopener">battle facts</a> (forces engaged, casualties) and maps.</li>
     </ul>
+    <h3>Eisenhower and the farm</h3>
+    <ul>
+      <li>Dwight D. Eisenhower, <i>At Ease: Stories I Tell to Friends</i> (1967); remarks at the centennial of the Gettysburg Address, November 19, 1963 (Eisenhower Presidential Library).</li>
+      <li>John S. D. Eisenhower, oral history interview at the farm (1984), printed in the Park Service lesson "Thaw in the Cold War" by Carol Hegeman.</li>
+      <li>National Park Service, <a href="https://www.nps.gov/eise/index.htm" target="_blank" rel="noopener">Eisenhower National Historic Site</a>: "Eisenhower at Gettysburg," "Ike and the Civil War," "Eisenhower Home Guide," "In the Footsteps of Leaders," "Eisenhower Farm," "Show Barn," and the site map. Also "The Generals Take the Field: Eisenhower and Montgomery at Gettysburg, 1957" and "The Army's First Tank School: Camp Colt at Gettysburg."</li>
+      <li>National Park Service, <i>Common Ground</i> (Winter 2007), and <i>The Presidents</i> survey entry for the site. Historic American Buildings Survey PA-5372.</li>
+      <li><i>Time</i>, November 28, 1955; May 27, 1957; and 1961, for the homecomings, the Montgomery tour and the congressional tour. <i>Gettysburg Times</i>, November 1955 and November 20, 1963.</li>
+      <li>Marilyn Irvin Holt, <i>Mamie Doud Eisenhower</i> (2007). Jean Edward Smith, <i>Eisenhower in War and Peace</i> (2012). Chris Mackowski and Dan Vermilya on the 1963 speech, <i>Emerging Civil War</i> (2017, 2020).</li>
+      <li>Building positions on the farm are from OpenStreetMap. Opening arrangements are from the Park Service's 2026 hours and home-tour pages.</li>
+    </ul>
     <h3>Pictures</h3>
     <ul><li>Every picture is public domain or Creative Commons licensed and comes from Wikimedia Commons, mostly from the Library of Congress and the National Archives. The photographer and licence are given under each one, with a link to its source page.</li><li>The map in each stop is drawn by this guide from its own data.</li></ul>
     <h3>Terrain</h3>
@@ -1234,6 +1331,7 @@ ol.tour img.th{float:right;width:68px;height:68px;object-fit:cover;border-radius
       <li>Stop positions are the monument or landmark locations and are accurate to a few yards. The spot where Reynolds fell and the Bliss farm site are placed by description and marked approximate.</li>
       <li>Unit positions on the map are approximate, one point per division at each of thirteen moments. Strengths are estimates rounded to the nearest hundred, after Busey and Martin, and fall as each division's losses accumulate across the three days. The totals count the divisions shown and leave out headquarters and some artillery.</li>
       <li>The relief, the 3D model and the drawn ground in Look come from NASA's SRTM elevation survey, about 30 metres between points. They show the shape of the land, not trees, fences or buildings. A label marked "behind high ground" is hidden according to that data.</li>
+      <li>The Eisenhower stops are written from Park Service publications and the sources listed, and were not checked line by line against the books. Where figures in print disagree, the stop says so. The helicopter field and the show barn are placed from the site map and are approximate.</li>
       <li>In Look, the labels are placed by compass bearing from where you stand. Trees and ridges will hide some of what they point to.</li>
     </ul>
   
@@ -1572,6 +1670,7 @@ const PH = {
 /* Schematic base map used when live map tiles cannot load. */
 const BASE = {
  roads:[
+  ["Eisenhower Farm Rd",[[39.79044,-77.2549],[39.79070,-77.2590],[39.79105,-77.26466],[39.79190,-77.2680],[39.79268,-77.27088]],[39.7903,-77.2598]],
   ["Chambersburg Pike",[[39.8308,-77.2311],[39.8312,-77.2385],[39.8349,-77.2450],[39.8379,-77.2516],[39.8426,-77.2620],[39.8470,-77.2720]],[39.8462,-77.2672]],
   ["Mummasburg Rd",[[39.8335,-77.2335],[39.8420,-77.2400],[39.8478,-77.2440],[39.8560,-77.2530]],[39.8548,-77.2490]],
   ["Carlisle Rd",[[39.8308,-77.2311],[39.8420,-77.2318],[39.8570,-77.2330]],[39.8548,-77.2345]],
@@ -1753,6 +1852,169 @@ const UNITS=[
  {id:"stuart",side:"c",corps:"cs",cn:"Stuart (cav.)",cc:"Cavalry Division",cs:"Cavalry",n:"Stuart",full:"Stuart's Cavalry Division",s:6600,loss:380,f:[0,.1,.9],k:{8:[39.8482,-77.1952],10:[39.8342,-77.1702]}}
 ];
 
+/* ---- Third tour layer: Eisenhower's farm, 1950 to 1969 ---- */
+P.push(
+{id:"ikearrive",k:"stop",layer:"E",num:"E1",pri:3,n:"The Lane: Why Ike Came Back",lat:39.79212,lon:-77.26488,day:[],when:"1915, 1918, 1950, 1961",
+ s:"Start at the visitor parking. Four arrivals in Gettysburg, forty-six years apart.",
+ body:[`Dwight Eisenhower came to Gettysburg four times before it was home. In the spring of 1915 he was a West Point cadet, here with his class to study the battle on the ground. In March 1918 he was back as a 27-year-old captain with a wife, a baby son and his first independent command: Camp Colt, the Army's tank school, laid out on the fields of Pickett's Charge.`,
+ `In 1950, a five-star general and president of Columbia University, he and Mamie went looking for somewhere to retire and remembered the town where they had been young. Late that year they bought this farm, 189 acres, from Allen Redding. Then the Army sent him to command NATO, and in 1952 he ran for president. He opened his Pennsylvania campaign with a picnic here. Retirement waited ten more years.`,
+ `On January 20, 1961, the day John Kennedy was sworn in, the Eisenhowers drove up from Washington in the snow and Gettysburg turned out to welcome them. He lived here until his last illness. It is the only house the two of them ever owned, after dozens of moves in the Army.`,
+ `The ground has its own 1863 story. The farm lay just behind the Confederate right. Southern troops camped on it, and the Park Service records that the remains of a Confederate soldier were found in the yard when the Eisenhowers had it landscaped.`],
+ views:[{to:"ikehome",t:`North-east, 200 yards up the path: the white house among the trees. Everything on this tour is within a five-minute walk of it.`},
+ {b:278,name:"South Mountain",t:`West: the long blue ridge is South Mountain, about ten miles off. Lee's army came over it to reach Gettysburg and went back over it in the rain on July 4 and 5. Mamie chose the house partly for this view.`},
+ {b:227,name:"Camp David",t:`South-west along that same ridge, about fifteen miles in a straight line: Camp David. Eisenhower named it for his grandson, and brought visiting leaders from there to here by helicopter.`},
+ {to:"ikefarm2",t:`South: the barns and silo of Farm 2, where the show cattle were kept. You finish the walk there.`}],
+ src:["National Park Service, Eisenhower NHS, \"Eisenhower at Gettysburg\"","National Park Service, Eisenhower NHS, \"Ike and the Civil War\"","Eisenhower, At Ease: Stories I Tell to Friends (1967)","Time, November 28, 1955, and January 1961 coverage of the homecomings"]},
+
+{id:"ikehome",k:"stop",layer:"E",num:"E2",star:1,pri:3,inside:1,n:"The Eisenhower Home",lat:39.79338,lon:-77.26356,day:[],when:"Rebuilt 1953 to 1955",
+ s:"The only house Ike and Mamie ever owned. Open inside only in season, so there is a room-by-room tour for the lawn.",
+ body:[`The house they bought was a two-story brick farmhouse. When work began in 1953 the builders found that the brick was a skin, added in the 1830s over a log house that Quinton Armstrong had put up in the 1750s, and that the logs were rotten. Almost all of it had to come down. Mamie asked them to save what they could. The kitchen, the butler's pantry and the maid's room above them are the old house; you can pick out that section from outside because its brick is rougher. Old and new brick did not match, so the whole house was painted white.`,
+ `The result has eight bedrooms and nine bathrooms and cost about $215,000, on a farm that had cost about $40,000. Ike's instruction to the builder, as the Park Service tells it, was to give Mamie what she wanted and send him the bill. It was finished in the spring of 1955. On July 1, their wedding anniversary, they invited the whole White House staff up to see it.`,
+ `Twelve weeks later, in Denver, he had a heart attack. He came here to recover on November 14, 1955, which was Mamie's fifty-ninth birthday; the high school band played for her in the square. He stayed thirty-eight days and ran the government from the small office and den at the north end of the house and from a room in the Gettysburg post office. Reporters called the farm the temporary White House. Across both terms he spent about a year's worth of days here.`,
+ `In 1967 the Eisenhowers gave the house and farm to the National Park Service and kept the right to live in it. He died at Walter Reed hospital on March 28, 1969, aged 78. Mamie stayed until 1979. The site opened to the public in 1980. Nearly everything inside is theirs and sits where they left it.`],
+ debate:`The dates and figures in print do not all agree. The Park Service gives the purchase as 1950 in most places and 1951 in one planning document; the price appears as $40,000 and $44,000; and the rebuilding cost as $215,000 and $250,000. This guide uses the Park Service's own figures where it has them.`,
+ views:[{to:"ikeporch",t:`Walk round to the east side of the house. The glassed-in room on the ground floor is the sun porch, the room they actually lived in.`},
+ {to:"ikebarn",t:`North: the big barn and, on its left end, the low milk house that became the Secret Service office.`},
+ {to:"ikeguest",t:`Just north of the house: the small guest house, converted from the old garage.`},
+ {b:278,name:"South Mountain",t:`West: the view the house was built around. The main bedroom upstairs has low windows so that Mamie could see the farm and the mountain from bed.`},
+ {to:"ikegarden",t:`South: the path to Mamie's rose garden, the teahouse and the greenhouse.`}],
+ src:["National Park Service, \"Eisenhower Home\" (place page) and \"Eisenhower Home Guide\"","National Park Service, Common Ground (Winter 2007), on the purchase and rebuilding","Eisenhower, At Ease (1967)","Time, November 28, 1955","National Park Service, The Presidents: Eisenhower National Historic Site"]},
+
+{id:"ikeporch",k:"stop",layer:"E",num:"E3",star:1,pri:3,n:"The Sun Porch",lat:39.79336,lon:-77.26326,day:[],when:"September 26, 1959",
+ s:"Where Khrushchev met the grandchildren, and where Ike painted.",
+ body:[`Stand on the lawn east of the house and look at the glassed-in porch. This was the favorite room. They ate here on TV trays, watched television, played cards with friends, and Ike set up his easel here; the canvas on it now copies one he left unfinished. Mamie's summary was "We lived on the porch." Eisenhower wrote that if he ever built another house he would build it around a room like this one.`,
+ `He also used it to work on people. Formal talks happened at Camp David or the White House. Then he would bring the visitor here, show him the cattle, and sit him down on the porch, because in a room like this he could take the measure of the man. Nehru of India came in December 1956 and stayed the night, the only foreign leader who did. Adenauer of West Germany and Field Marshal Montgomery came in May 1957, Churchill in May 1959, de Gaulle in April 1960.`,
+ `The visit that mattered most was Nikita Khrushchev's. In September 1959 the two were stuck at Camp David over Berlin. Eisenhower flew him here by helicopter on the 26th. Khrushchev admired the Angus and was offered one. On this porch he met the Eisenhower grandchildren, gave them red-star pins, as his granddaughter Susan remembers it, and invited the whole family to Moscow. He went back to Camp David in a better temper, and the Berlin deadline was lifted. For a few months the Cold War looked as if it might ease.`,
+ `It did not last. In May 1960 a U-2 spy plane was shot down over the Soviet Union. Eisenhower took one of the calls about it in the little office at the other end of this house. The Paris summit collapsed, and the invitation to Moscow was withdrawn.`],
+ debate:`One Park Service page dates Khrushchev's visit September 29, 1959. He left the United States on the 27th; the Park Service's own lesson plan, built on John Eisenhower's oral history, gives the 26th, and that is the date used here.`,
+ views:[{to:"ikegreen",t:`North-east, a few steps across the lawn: the putting green and the flagpole. Beyond them is the field the helicopters used.`},
+ {to:"warfield",t:`North-east, over the trees: the Warfield Ridge tower, six-tenths of a mile off, marks the Confederate line of July 2. The porch looks toward the battlefield; Seminary Ridge closes the view.`},
+ {to:"lrt",t:`A little south of east, a mile and a half away and usually hidden by the near ridge and its woods: Little Round Top. Eisenhower walked guests over it and argued about Lee's choices there.`},
+ {to:"ikehome",t:`Behind you, the house. The porch is on its east side; the older, rougher brick of the original farmhouse is at the north end.`}],
+ src:["National Park Service, Teaching with Historic Places, \"Thaw in the Cold War: Eisenhower and Khrushchev at Gettysburg\"","John S. D. Eisenhower, oral history interview, Eisenhower NHS (1984)","National Park Service, \"In the Footsteps of Leaders: Famous Visitors to the Eisenhowers' Gettysburg Farm\"","National Park Service, \"Eisenhower Home Guide\"","Eisenhower, At Ease (1967)"]},
+
+{id:"ikegreen",k:"stop",layer:"E",num:"E4",pri:3,n:"Putting Green and Helicopter Field",lat:39.79354,lon:-77.26300,day:[],when:"1955 to 1969",
+ s:"A golf green with a sand trap, a flagpole, and the lawn where world leaders landed.",
+ body:[`Eisenhower played golf more than any president before him, usually at the Gettysburg Country Club. The green here, with its sand trap, was a gift of the Professional Golfers' Association, so that he could practice a few steps from the back door.`,
+ `The open ground beside it was the landing field. In 1957 Eisenhower became the first president to travel by helicopter, and the hop from the White House lawn or from Camp David to this farm was one of the reasons. Churchill arrived this way in 1959, at eighty-four, and was driven round the farm. Khrushchev and de Gaulle came the same way.`,
+ `The flagpole was a present too, from Republicans in Suffolk County, New York.`],
+ views:[{to:"ikeporch",t:`South-west: the back of the house and the sun porch.`},
+ {to:"ikebarn",t:`North: the barn. The reception center and bookstore are in the low building to its right.`},
+ {to:"ikeskeet",t:`East, 370 yards along the farm lane: the skeet range, out toward the tree line.`},
+ {b:227,name:"Camp David",t:`South-west, fifteen miles: Camp David. A helicopter covered it in a few minutes.`}],
+ src:["National Park Service, Gettysburg NMP, \"Eisenhower National Historic Site\" (grounds tour)","National Park Service, \"Ike and the Civil War\" (on Churchill's arrival)","National Park Service, Eisenhower NHS site map"]},
+
+{id:"ikebarn",k:"stop",layer:"E",num:"E5",pri:3,n:"The Barn and the Secret Service",lat:39.79400,lon:-77.26324,day:[],when:"Nineteenth-century barn; guarded 1955 to 1979",
+ s:"A Pennsylvania bank barn, the agents' office in the old milk house, and the reception center.",
+ body:[`The big barn was here long before the Eisenhowers. It is a Pennsylvania bank barn: built into a slope so that wagons drive straight into the upper floor while the animals are stabled below.`,
+ `The low milk house on its left end became the Secret Service office. Agents watched the gates and the lanes from here until 1979, first for a president and then for a former president and his widow. They also kept a lookout platform up in the barn. You can look in through the glass at the radios and desks of the late 1960s.`,
+ `The Park Service keeps some of the family's vehicles on the farm, among them the 1955 Chrysler Imperial limousine, a small Crosley runabout that Ike used to drive guests round the fields, and golf carts. The reception center and bookstore are beside the barn, and so are the restrooms. Check here for a ranger and for whether anything is open that day.`],
+ views:[{to:"ikehome",t:`South: the house, eighty yards away. The north end, nearest you, holds the den and the small office that served as the temporary White House in 1955.`},
+ {to:"ikeguest",t:`South-west: the guest house. Montgomery stayed on the farm for a weekend in May 1957 and criticized his host's generalship in his memoirs the next year. He was not asked back.`},
+ {to:"pitzerschool",t:`North, half a mile, out of sight in the valley of Willoughby Run: the site of Pitzer's Schoolhouse. Longstreet's column came down that valley on the afternoon of July 2 on its way to attack.`},
+ {to:"ikeskeet",t:`East along the lane: the skeet range.`}],
+ src:["National Park Service, Eisenhower NHS site map and alt text","Historic American Buildings Survey, PA-5372-A, \"Eisenhower Farm One, Bank Barn\"","National Park Service, \"Bernard Montgomery\" (people page)"]},
+
+{id:"ikeskeet",k:"stop",layer:"E",num:"E6",opt:1,pri:3,n:"Skeet Range and the Confederate Line",lat:39.79384,lon:-77.25911,day:[2],when:"July 2, 1863, and the 1950s",
+ s:"Ike's shooting range, 400 yards behind where Longstreet's corps formed to attack.",
+ body:[`Eisenhower shot trap and skeet here with friends, and the wayside explains the two games. It is a short level walk east from the reception center.`,
+ `It is also the closest point on the farm to the battle. The tree line ahead of you to the east is Biesecker Woods on Warfield Ridge. On the afternoon of July 2, 1863, about 14,000 men of Hood's and McLaws's divisions came down the Willoughby Run valley behind you, passed over the fields around you and formed along that ridge, facing away from you toward the Peach Orchard and the Round Tops. At about four o'clock they went forward. The farm lay in the rear of that attack.`,
+ `Eisenhower knew exactly where he had bought, and he had firm views on the battle. He admired Lee's character and held him responsible for the defeat. He had sympathy for Meade and for Ewell, none for Sickles, who disobeyed orders and then claimed the credit, and little for Stuart. Standing at the Virginia Memorial with Montgomery in 1957, looking over the ground of the July 3 assault, he said, "Why Lee would have gone across that field, I don't know."`],
+ debate:`The Park Service says that the note Eisenhower drafted before D-Day, accepting sole blame if the landings failed, was modelled on Lee's conduct after the assault of July 3. Eisenhower admired that conduct and the two statements are alike; whether one was the conscious model for the other rests on the Park Service's account and not on anything he is known to have written.`,
+ views:[{to:"warfield",t:`North-north-east, 800 yards: the Warfield Ridge tower, at the left end of the line McLaws's division formed along.`},
+ {to:"ikeentrance",t:`South-east: where the farm lane meets the Emmitsburg Road. Hood's division crossed the road near there to attack the Round Tops.`},
+ {to:"lrt",t:`A little south of east, 1.2 miles, beyond the ridge and out of sight: Little Round Top. Hood's men had more than a mile of open and broken ground to cross to reach it.`},
+ {to:"ikehome",t:`West: the house in its trees. On July 2 this was farmland behind an army.`}],
+ src:["National Park Service, \"Ike and the Civil War\"","National Park Service, \"The Generals Take the Field: Eisenhower and Montgomery at Gettysburg, 1957\"","Pfanz, Gettysburg: The Second Day (1987)","Official Records, vol. 27, pt. 2: reports of Longstreet, McLaws and Law"]},
+
+{id:"ikegarden",k:"stop",layer:"E",num:"E7",pri:3,n:"Mamie's Garden and the Teahouse",lat:39.79282,lon:-77.26335,day:[],when:"1955 to 1979",
+ s:"The rose garden, the teahouse and the greenhouse. Mamie's side of the story.",
+ body:[`Mamie Doud was nineteen when she married a young lieutenant in 1916. They set up house dozens of times before this one. Their first son, Doud Dwight, called Icky, was a baby when they lived in Gettysburg in 1918; he died of scarlet fever at three. The one picture of him in the house hangs in her mother's room.`,
+ `This house was hers. She worked through the plans with the architects, filled it with the furniture that had followed them from post to post, and ran it from the main bedroom, where she spent her mornings on letters and menus. The pink bathroom upstairs is the color she made famous. The entrance hall holds the guest book she made every visitor sign, prime ministers and grandchildren alike.`,
+ `The rose garden and the small teahouse were added after the house was finished, and there is a greenhouse beside them. She lived here ten years as a widow and would not move to Washington. She was born on November 14, 1896.`],
+ views:[{to:"ikehome",t:`North: the house. Her bedroom is upstairs, the one with the low windows.`},
+ {b:278,name:"South Mountain",t:`West: fields running to South Mountain. The farm's crop and pasture land lies this way.`},
+ {to:"ikefarm2",t:`South, through the trees: the path to Farm 2 and the cattle barns.`}],
+ src:["National Park Service, \"Eisenhower Home Guide\"","Holt, Mamie Doud Eisenhower: The General's First Lady (2007)","Susan Eisenhower, Mrs. Ike (1996)"]},
+
+{id:"ikefarm2",k:"stop",layer:"E",num:"E8",pri:3,n:"Farm 2: The Show Herd",lat:39.79100,lon:-77.26430,day:[],when:"1954 to 1966",
+ s:"The Angus barns, where a president did his farming and some of his diplomacy.",
+ body:[`Eisenhower wanted the farm to work. The soil was worn out when he bought it, and he spent fifteen years rotating crops and building it back up; his stated aim was to hand the land on in better condition than he had received it. He did not have the money or the acres for a serious herd, so friends came in as partners. W. Alton Jones, an oil executive, bought the adjoining farms in 1954 and 1955, and the partnership, Eisenhower Farms, ran about 495 acres.`,
+ `They sold the dairy cows in 1954 and went into purebred Aberdeen Angus. Two things in 1956 made the herd: a bull named Ankonian 3551, and a herdsman, Bob Hartley, who lived in the yellow house here. The long show barn was built in 1957, with sand-floored pens, and the show animals were fed on cooked barley and molasses. Eisenhower Farms cattle took grand championships at the Pennsylvania Farm Show and ribbons at the International in Chicago. While he was president the animals were never shown under his name, so that no judge would be tempted.`,
+ `Every important visitor was walked through these barns. Khrushchev was offered a heifer here. It was easier to talk about cattle first.`,
+ `Jones was killed in an airliner crash in March 1962 on his way to join Eisenhower for a fishing trip. After a second heart attack Eisenhower sold the show herd in 1966. The Angus you see in the fields today belong to a local farmer who leases the land from the Park Service on condition that he keeps the breed.`],
+ views:[{to:"ikehome",t:`North, 300 yards: the house. The walk between the two farms took the General a few minutes in a golf cart.`},
+ {to:"ikearrive",t:`A little west of north: the visitor parking, where you started.`},
+ {b:190,name:"Show barn and pens",t:`South: the long low show barn and the bull pens are at the far end of the farm lane. The ribbons are kept inside; the building is open only in season.`},
+ {b:278,name:"South Mountain",t:`West: pasture, and the mountain.`}],
+ src:["National Park Service, \"Eisenhower Farm\" (article) and \"Show Barn\" (place page)","National Park Service, museum collection exhibit, \"Farm: Cattle Breeding and Showing\"","National Park Service, \"The Head Herdsman's Home\"","National Park Service news release, \"Eisenhower Farms Sign Donated to Site\" (2012)"]},
+
+{id:"campcolt",k:"stop",layer:"E",num:"E9",opt:1,pri:3,n:"Camp Colt: The Tank School",lat:39.81489,lon:-77.23755,day:[],when:"March to November 1918",
+ s:"On the battlefield, beside the Emmitsburg Road: a pine tree and a tablet where Captain Eisenhower trained the Tank Corps.",
+ body:[`This one is not on the farm. It is on the Emmitsburg Road, on your way between the Angle and town, and you will pass it on the main tour. Look for a tall pine with a bronze tablet and a Park Service wayside.`,
+ `In March 1918 the Army gave Captain Eisenhower a camp, a stream of volunteers and no tanks, and told him to turn out tank crews for France. The camp covered the Codori and neighboring farms, the ground Pickett's and Pettigrew's men had crossed fifty-five years before. His men drilled, learned engines and Morse code, and practiced gunnery from machine guns bolted to flatbed trucks. The first small Renault tanks did not arrive until June. By September he had more than ten thousand officers and men under him. He was promoted twice, and was a lieutenant colonel on his twenty-eighth birthday.`,
+ `That autumn the influenza reached the camp. Within weeks well over a hundred of his soldiers were dead. He quarantined the camp and worked with the town's doctors, and the outbreak was over by late October. He had orders to sail for France on November 18. The war ended on the 11th.`,
+ `He thought he had missed the one war of his lifetime. The Army thought otherwise and later gave him the Distinguished Service Medal for this command. The Tank Corps veterans planted the pine in 1954, when their old captain was president.`],
+ views:[{to:"angle",t:`South-east, up the slope: the Angle and the copse of trees. The camp's tents and barracks stood on the fields in between.`},
+ {to:"codori",t:`South-west along the road: the Codori farm, whose fields were the heart of the camp.`},
+ {to:"vamem",t:`West: the Virginia Memorial on Seminary Ridge. In 1957 Eisenhower stood there with Montgomery and wondered aloud why Lee had ordered the assault.`},
+ {to:"platform",t:`North-east: Cemetery Hill. The young captain used to walk up to the National Cemetery and read the Address to himself near where Lincoln gave it. On November 19, 1963, he gave the centennial speech there himself.`}],
+ src:["National Park Service, \"The Army's First Tank School: Camp Colt at Gettysburg\"","Eisenhower, At Ease (1967), on Camp Colt","American Battlefield Trust, \"From Gettysburg to the Western Front and Back Again\"","Park Service wayside, \"Camp Colt: The Tank Corps,\" Emmitsburg Road","Mackowski and Vermilya, \"On Ike in Gettysburg,\" Emerging Civil War (2020)"]},
+
+{id:"ikeoffice",k:"stop",layer:"E",num:"E10",opt:1,pri:3,n:"Ike's Office at the College",lat:39.83544,lon:-77.23163,day:[],when:"1961 to 1969",
+ s:"In town, at 300 Carlisle Street: where the former president went to work each weekday.",
+ body:[`In retirement Eisenhower kept office hours. Gettysburg College lent him this house at the edge of the campus, and he was driven in from the farm most weekday mornings to answer mail, see politicians and businessmen, and write. Two volumes of presidential memoirs and the informal book At Ease came out of this building. It is the college admissions office now, with a statue of him outside. It is closed on Saturdays; you are here for the outside.`,
+ `From here he took part in the centennial. On November 19, 1963, a hundred years to the day after Lincoln, he spoke in the National Cemetery. President Kennedy had been invited and had declined because of a trip to Texas. Eisenhower's theme was that the task Lincoln set had not been completed and never would be, in his words "the unfinished work of which he spoke in 1863 is still unfinished." Three days later Kennedy was killed in Dallas, and the speech was forgotten.`,
+ `The room he used after the 1955 heart attack is also in town: the old post office on Baltimore Street, now the Adams County Library.`],
+ views:[{to:"town",t:`South, a third of a mile down Carlisle Street: the square, where the town welcomed him in 1955 and again in 1961, and the Wills house where Lincoln slept.`},
+ {to:"platform",t:`South, a mile: the National Cemetery, where he spoke in 1963.`},
+ {to:"peace",t:`North-west: Oak Hill and the Peace Memorial, where his 1957 tour with Montgomery began.`}],
+ src:["National Park Service, \"Eisenhower at Gettysburg\"","Eisenhower, remarks at the centennial of the Gettysburg Address, November 19, 1963 (Eisenhower Presidential Library)","Mackowski, \"Ike, JFK, and the Gettysburg Address,\" Emerging Civil War (2017)","Gettysburg Times, November 20, 1963"]},
+
+{id:"ikeguest",k:"mark",pri:2,n:"Guest House",lat:39.79381,lon:-77.26361,day:[],s:"The old garage, converted for guests. Field Marshal Montgomery stayed on the farm in May 1957."},
+{id:"ikeentrance",k:"mark",pri:1,n:"Eisenhower farm entrance",lat:39.79044,lon:-77.25490,day:[],s:"The farm lane leaves the Emmitsburg Road here, just south of where Confederate Avenue crosses it. Drive in this way. The way out is by Red Rock Road."},
+{id:"pitzerschool",k:"mark",pri:1,n:"Pitzer's Schoolhouse (site)",lat:39.79988,lon:-77.26582,day:[2],s:"Longstreet's column came down the Willoughby Run valley past the schoolhouse on the afternoon of July 2, on the concealed march to the Union left."},
+{id:"campdavid",k:"mark",pri:2,far:1,n:"Camp David",lat:39.648,lon:-77.465,day:[],s:"The presidential retreat on South Mountain in Maryland, about fifteen miles south-west of the farm. Eisenhower renamed it for his grandson and flew his guests from there to Gettysburg."}
+);
+Object.assign(SUM,{
+ ikearrive:["Eisenhower studies the battle here as a cadet in 1915, commands a tank camp on the field in 1918, buys this farm in 1950 and retires to it in 1961.","Dwight and Mamie Eisenhower, and Allen Redding, who sold them the farm.","It is the only home they ever owned, and it sits just behind the Confederate line of July 2."],
+ ikehome:["A brick farmhouse turns out to be a rotten log house in disguise and is rebuilt, 1953 to 1955. It becomes the temporary White House after his 1955 heart attack.","Mamie, who planned it, and Ike, who paid.","Almost everything inside is theirs. It is open only in season, so there is a room-by-room tour below for the lawn."],
+ ikeporch:["The Eisenhowers live on this glassed-in porch, and Ike brings world leaders here to talk without ceremony.","Khrushchev in September 1959; also Nehru, Churchill, de Gaulle, Adenauer and Montgomery.","For a few months after Khrushchev sat here the Cold War eased. The U-2 ended that in May 1960."],
+ ikegreen:["A putting green given by the PGA, the flagpole, and the field where helicopters from Camp David and Washington set down.","Eisenhower, the first president to fly by helicopter, and the guests he brought.","The farm was fifteen miles from Camp David, which made it part of how he did business."],
+ ikebarn:["The farm's old bank barn, with the Secret Service office in the milk house on its end and the reception center beside it.","The agents who guarded the family from 1955 to 1979.","Start here for restrooms, the bookstore and a ranger."],
+ ikeskeet:["Ike's trap and skeet range. On July 2, 1863, Hood's and McLaws's divisions crossed this ground to form on the ridge just east.","Eisenhower and his shooting friends; Longstreet's 14,000 in 1863.","It is the nearest point on the farm to the fighting, and the place to hear what Ike thought of Lee's battle."],
+ ikegarden:["The rose garden, teahouse and greenhouse beside the house.","Mamie Eisenhower, born November 14, 1896.","After dozens of Army moves, this was the home she designed and would not leave."],
+ ikefarm2:["Eisenhower and his partners raise prize Aberdeen Angus here from 1954 to 1966 and walk every visiting leader through the barns.","Ike, his partner W. Alton Jones, herdsman Bob Hartley, and a bull called Ankonian 3551.","He farmed seriously, and he used the cattle to put guests at ease before the hard conversations."],
+ campcolt:["Captain Eisenhower, 27, trains the Army's new Tank Corps on the fields of Pickett's Charge, and brings the camp through the 1918 influenza.","Eisenhower and more than 10,000 officers and men.","It was his first command, it won him the Distinguished Service Medal, and it is why he came back."],
+ ikeoffice:["The former president's weekday office from 1961, where he wrote his memoirs.","Eisenhower and a small staff, as guests of Gettysburg College.","From here he went to the National Cemetery on November 19, 1963, to speak on the centennial of Lincoln's Address."]
+});
+
+/* The house room by room, for standing outside when it is closed. v = Park Service video of the room. */
+const ROOMS=[
+ {n:"Entrance hall",f:"Ground floor",t:"Mamie kept a guest book here and everyone signed it, heads of government and grandchildren alike. Her cabinet of keepsakes mixes gifts of state with souvenir-stand china and figurines saved from cereal boxes."},
+ {n:"Living room",f:"Ground floor",t:"The formal room, and the one they used least. It holds gifts from governments and friends: a lacquer table from Korea, a silk rug from the Shah of Iran, a painting of Prague given by that city in 1945. The marble mantel was taken out of the White House in Grant's time and given to them by the White House staff as an anniversary present."},
+ {n:"Sun porch",f:"Ground floor, east side",t:"The room they lived in: television, cards, supper on trays, and Ike's easel. Khrushchev, de Gaulle and Nehru all sat here."},
+ {n:"Dining room",f:"Ground floor",t:"Used for company. The table and chairs are the set Mamie bought in 1927 and moved from post to post. The silver tea service was bought one piece at a time by a young major out of his poker winnings."},
+ {n:"Kitchen and pantry",f:"Ground floor, the old house",t:"Part of the original farmhouse. Ike liked to cook, mostly soups, stews and big breakfasts. Mamie said her own range was fudge and mayonnaise. Delores Moaney cooked most of the family's meals.",v:"https://www.nps.gov/media/video/view.htm?id=C86A625A-1DD8-B71B-0B4FBE763ABC7C2C"},
+ {n:"The den",f:"Ground floor, north end",t:"Built to keep something of the old house: the fireplace and bake oven came from the summer kitchen, and the floor and beams are salvaged wood. He read here and played bridge. A Civil War musket and pike hang on the wall.",v:"https://www.nps.gov/media/video/view.htm?id=64FD5FED-1DD8-B71B-0B6CD69CA11376EC"},
+ {n:"The office",f:"Ground floor, north end",t:"Small, and meant for farm accounts. With the den it was the temporary White House in late 1955; bills were signed at this desk, which copies one of George Washington's and is made of pine taken out of the White House during its rebuilding. In May 1960 he took a call here about the U-2.",v:"https://www.nps.gov/media/video/view.htm?id=656F7CDC-1DD8-B71B-0B08877F0D283981"},
+ {n:"The Moaneys' room and the laundry",f:"Ground floor",t:"Sergeant John Moaney joined Eisenhower's staff in 1942 and stayed with him for the rest of his life as valet; his wife Delores was the family's cook. They remained with Mamie after 1969.",v:"https://www.nps.gov/media/video/view.htm?id=641BC4FA-1DD8-B71B-0B5940030FB2B05B"},
+ {n:"Main bedroom",f:"Upstairs",t:"Mamie's command post. The windows are set low so she could see the farm from bed, and she did much of her morning's work here. After he died she kept his side of the bed piled with books and writing paper.",v:"https://www.nps.gov/media/video/view.htm?id=61AF781C-1DD8-B71B-0BCEA2F6F96083C4"},
+ {n:"Mamie's dressing room and bath",f:"Upstairs",t:"Pink, down to the fixtures. His West Point photograph stands on her dressing table.",v:"https://www.nps.gov/media/video/view.htm?id=614C8148-1DD8-B71B-0B3F775B18D6760D"},
+ {n:"The General's room",f:"Upstairs",t:"A plain dressing room with a single bed. After the heart attack his doctors ordered a nap every afternoon and he took it here. The shelf holds his westerns. Over the bed is his own painting of two of the grandchildren.",v:"https://www.nps.gov/media/video/view.htm?id=60A758A0-1DD8-B71B-0B8850F5BC025C12"},
+ {n:"Sitting room",f:"Upstairs",t:"First the grandchildren's television room, later Mamie's sitting room. His West Point yearbooks are on the shelves. He finished a snow scene here while he was recovering in 1955.",v:"https://www.nps.gov/media/video/view.htm?id=9CC63436-1DD8-B71B-0B33A4FDDC8AD1E3"},
+ {n:"Mrs. Doud's room",f:"Upstairs",t:"For Mamie's mother, who lived with them until she died in 1960. It has the only picture in the house of their first son, who died at three.",v:"https://www.nps.gov/media/video/view.htm?id=999088EF-1DD8-B71B-0B4C50FFC8F3A96F"},
+ {n:"Guest rooms",f:"Upstairs",t:"Nehru slept here in December 1956. Four of Ike's paintings hang in the hall outside.",v:"https://www.nps.gov/media/video/view.htm?id=634ABC2D-1DD8-B71B-0B6F51B309243140"},
+ {n:"Maid's room",f:"Upstairs, the old house",t:"Rose Wood, Mamie's maid, had this room. It sits over the kitchen in the one part of the original farmhouse that was saved, and holds some of the couple's earliest furniture.",v:"https://www.nps.gov/media/video/view.htm?id=62A1FB4F-1DD8-B71B-0B042C9429449044"}
+];
+const INSIDE=[
+ ["Walk through the house in 3D","Google Arts & Culture, made with the Park Service","https://artsandculture.google.com/partner/eisenhower-national-historic-site"],
+ ["Watch the ranger tour, room by room","National Park Service video","https://www.nps.gov/media/video/view.htm?id=5A2469D5-1DD8-B71B-0B6FC4B4268A5803"],
+ ["All the Park Service virtual tours","nps.gov","https://www.nps.gov/eise/learn/photosmultimedia/virtual-tour.htm"]
+];
+
+Object.assign(IMG,{"ikearrive": [{"f": "p-ikearrive-1.jpg", "y": "1800s", "c": "The farm in the nineteenth century, long before the Eisenhowers. The brick house in this picture is the one they bought.", "w": 960, "h": 609, "cr": "National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:The_Eisenhower_Farm_in_the_19th_Century_(755bef4e-24f4-4549-8b04-78ab6c8f43bf).jpg"}, {"f": "p-ikearrive-2.jpg", "y": "Today", "c": "The entry lane in spring.", "w": 960, "h": 720, "cr": "National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:Eisenhower_Farm_Front_Lane_(27801b0e-1dd8-b71b-0b88-4669bd10306c).jpg"}, {"f": "p-ikearrive-3.jpg", "y": "Today", "c": "Sunrise over the farm's fields.", "w": 960, "h": 640, "cr": "Mary O'Neill, National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:Sunrise_on_the_Eisenhower_Farm_(0e1ea837-fa70-41f3-bc43-57d005ae3bde).jpg"}, {"f": "p-ikearrive-4.jpg", "y": "Today", "c": "The farm from the fields: house, barn and trees in one line.", "w": 960, "h": 254, "cr": "National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:A_panoramic_image_of_the_Eisenhower_property_and_barn._(111c705d-d134-44f1-8969-a986468d9608).jpg"}, {"f": "p-ikearrive-5.jpg", "y": "Today", "c": "The Park Service's bird's-eye drawing of the two farms.", "w": 960, "h": 378, "cr": "National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:Aerial_view_(drawing)_of_Eisenhower_National_Historic_Site,_Pennsylvania.jpg"}], "ikehome": [{"f": "p-ikehome-1.jpg", "y": "Today", "c": "The front of the house.", "w": 960, "h": 629, "cr": "Cory Hartman \u00b7 CC BY-SA 3.0", "u": "https://commons.wikimedia.org/wiki/File:Eisenhower%27s_Gettysburg_home.JPG"}, {"f": "p-ikehome-2.jpg", "y": "Today", "c": "The house in November.", "w": 960, "h": 658, "cr": "Acroterion \u00b7 CC BY-SA 4.0", "u": "https://commons.wikimedia.org/wiki/File:Eisenhower_main_house_PA1.jpg"}, {"f": "p-ikehome-3.jpg", "y": "Today", "c": "The living room, with the mantel that came out of the White House.", "w": 960, "h": 636, "cr": "Niagara \u00b7 CC BY-SA 3.0", "u": "https://commons.wikimedia.org/wiki/File:Eisenhower_NHS_living_room.jpg"}, {"f": "p-ikehome-4.jpg", "y": "Today", "c": "The den, built around the old farmhouse's fireplace.", "w": 960, "h": 615, "cr": "National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:The_President%27s_den_reflects_his_many_interests._It_includes_Civil_War_artifacts_and_a_portion_of_his_860_book_library._(27466e0b-1dd8-b71b-0b0a-6fe93b88ed86).jpg"}, {"f": "p-ikehome-5.jpg", "y": "Today", "c": "Mamie's cabinet of keepsakes in the entrance hall.", "w": 960, "h": 720, "cr": "General Burnside \u00b7 CC BY-SA 3.0", "u": "https://commons.wikimedia.org/wiki/File:Eisenhower_Farm_-_cabinet.jpg"}, {"f": "p-ikehome-6.jpg", "y": "Today", "c": "The dining table set with Mamie's china.", "w": 960, "h": 610, "cr": "National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:Eisenhower_Christmas_Dinner_Table_Setting_(0e4555ea-867c-4951-90d8-122d77544ebe).jpg"}], "ikeporch": [{"f": "p-ikeporch-1.jpg", "y": "Today", "c": "Inside the sun porch. The easel is at the far end.", "w": 960, "h": 631, "cr": "Niagara \u00b7 CC BY-SA 3.0", "u": "https://commons.wikimedia.org/wiki/File:Eisenhower_NHS_porch.jpg"}, {"f": "p-ikeporch-2.jpg", "y": "1961", "c": "The back of the house and the porch in 1961, the year the Eisenhowers retired here.", "w": 480, "h": 372, "cr": "Gottscho-Schleisner, Library of Congress \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:General_Dwight_D._Eisenhower,_residence_in_Gettysburg._LOC_gsc.5a27912.jpg"}, {"f": "p-ikeporch-3.jpg", "y": "Today", "c": "The back of the house, with the long glassed-in sun porch.", "w": 960, "h": 640, "cr": "Mary O'Neill, National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:Back_of_Eisenhower_House_(4c8e7405-6a74-4fc7-9ec3-eacc6a620fb3).jpg"}, {"f": "p-ikeporch-4.jpg", "y": "Today", "c": "The house from the back lawn.", "w": 960, "h": 448, "cr": "Mary O'Neill, National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:View_of_Eisenhower_home_from_the_back._(766cf804-3c42-483b-80cf-1e64ad98ca79).jpg"}, {"f": "p-ikeporch-5.jpg", "y": "Today", "c": "Looking out from the house toward the ridges.", "w": 960, "h": 640, "cr": "Mary O'Neill, National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:View_from_Eisenhower_Home_(3c447926-85f0-4141-ae9c-5cd7820a933c).jpg"}], "ikegreen": [{"f": "p-ikegreen-1.jpg", "y": "Today", "c": "The putting green, with the house behind.", "w": 960, "h": 633, "cr": "Mary O'Neill, National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:Back_of_Eisenhower_House_and_Putting_Green_(5134c7ae-230e-4581-b981-86029395959c).jpg"}, {"f": "p-ikegreen-2.jpg", "y": "Today", "c": "The helicopter landing field.", "w": 960, "h": 640, "cr": "Mary O'Neill, National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:Helicopter_landing_pad_at_Eisenhower_National_Historic_Site._(5fea71fb-677f-4ca5-8bf1-fbc0a8b54db0).jpg"}, {"f": "p-ikegreen-3.jpg", "y": "Today", "c": "The flagpole behind the house.", "w": 960, "h": 640, "cr": "Mary O'Neill, National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:Flagpole_behind_the_Eisenhower_home_at_Eisenhower_National_Historic_Site._(a39c5c49-eced-4cd4-bc6d-242e4903cb44).jpg"}], "ikebarn": [{"f": "p-ikebarn-1.jpg", "y": "Today", "c": "The bank barn, with the putting green in front.", "w": 960, "h": 720, "cr": "National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:Eisenhower_Farm_1_Barn_(26a973db-1dd8-b71b-0b0b-c7b640ce7829).jpg"}, {"f": "p-ikebarn-2.jpg", "y": "Today", "c": "The south gable of the bank barn.", "w": 960, "h": 640, "cr": "Mary O'Neill, National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:South_Side_of_Eisenhower_Bank_Barn_(28746468-b15b-4435-9c99-a3eb26a71817).jpg"}, {"f": "p-ikebarn-3.jpg", "y": "Today", "c": "The Secret Service lookout platform inside the barn.", "w": 960, "h": 640, "cr": "Mary O'Neill, National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:Bank_Barn_Secret_Service_Platform_(61864275-98e4-4b2f-80fe-20ec36a11896).jpg"}, {"f": "p-ikebarn-4.jpg", "y": "Today", "c": "The view from the agents' window.", "w": 960, "h": 640, "cr": "Mary O'Neill, National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:Window_on_Secret_Service_Platform_(5eb4ea2e-8500-4418-b2c8-94b22970cd39).jpg"}, {"f": "p-ikebarn-5.jpg", "y": "Today", "c": "The 1955 Chrysler Imperial limousine.", "w": 960, "h": 640, "cr": "Mary O'Neill, National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:1955_Crown_Imperial_Limousine_in_Eisenhower_Garage_(41d9043c-7014-4687-a3b7-c6398bd94e39).jpg"}, {"f": "p-ikebarn-6.jpg", "y": "Today", "c": "The Crosley runabout Ike used to drive guests round the farm.", "w": 960, "h": 640, "cr": "Mary O'Neill, National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:Crosley_in_Eisenhower_Garage_(430ef54a-153b-43f7-9d55-818cd14aec7b).jpg"}, {"f": "p-ikebarn-7.jpg", "y": "Today", "c": "The guest house.", "w": 960, "h": 640, "cr": "Mary O'Neill, National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:The_guesthouse_at_Eisenhower_National_Historic_Site._(24c28546-e778-442f-aef1-155c5b454326).jpg"}], "ikeskeet": [{"f": "p-ikeskeet-1.jpg", "y": "Today", "c": "The skeet range and its tower. The tree line is Warfield Ridge.", "w": 960, "h": 640, "cr": "Mary O'Neill, National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:Skeet_range_at_Eisenhower_National_Historic_Site_(2e7f259a-d0b7-441a-9220-c1a603c47033).jpg"}, {"f": "p-ikeskeet-2.jpg", "y": "Today", "c": "The range from the lane.", "w": 960, "h": 296, "cr": "Mary O'Neill, National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:Skeet_range_at_Eisenhower_National_Historic_Site_(138e75a0-6932-489f-b6ec-b224284d281f).jpg"}], "ikegarden": [{"f": "p-ikegarden-1.jpg", "y": "Today", "c": "The teahouse.", "w": 960, "h": 640, "cr": "Mary O'Neill, National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:Teahouse_at_Eisenhower_Home_(83603b35-315a-49ee-a2db-ca726ebafd5b).jpg"}, {"f": "p-ikegarden-2.jpg", "y": "Today", "c": "The rose walk behind the house.", "w": 960, "h": 640, "cr": "Mary O'Neill, National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:The_rose_graden_lines_the_path_in_the_back_of_the_Eisenhower_home._(e9b08a40-a854-4c8e-8137-ec10737de92c).jpg"}, {"f": "p-ikegarden-3.jpg", "y": "Today", "c": "The greenhouse.", "w": 960, "h": 640, "cr": "Mary O'Neill, National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:Greenhouse_on_the_grounds_of_Eisenhower_National_Historic_Site._(4bb2a539-92d8-4ff7-b300-27fe05596cbc).jpg"}], "campcolt": [{"f": "p-campcolt-1.jpg", "y": "1918", "c": "Camp Colt, summer 1918: trainees follow a Renault light tank across the Bliss farm, on the ground of the July 3 assault.", "w": 960, "h": 761, "cr": "James L. McGarrigle \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:Gettysburg,_Camp_Colt_1918.jpg"}, {"f": "p-campcolt-2.jpg", "y": "Today", "c": "A panoramic photograph of the camp, shown at the Eisenhower site.", "w": 960, "h": 640, "cr": "National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:A_historical_image_of_Gettysburg%27s_own_Camp_Colt._(3b7ccadf-4dc1-477a-852c-734b7271f0c5).JPG"}], "ikefarm2": [{"f": "p-ikefarm2-1.jpg", "y": "Today", "c": "The show barn, built in 1957.", "w": 960, "h": 640, "cr": "National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:The_Show_Barn_was_designed_to_not_only_house_cattle_but_to_provide_a_facility_where_they_could_be_groomed_and_prepared_for_(2b1c360c-d387-424d-b515-d7510c5d0ff8).JPG"}, {"f": "p-ikefarm2-2.jpg", "y": "Then", "c": "Farm 2 when W. Alton Jones owned it and the show herd lived there.", "w": 960, "h": 1014, "cr": "National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:The_neighboring_property_of_W._Alton_Jones,_which_General_Eisenhower_used_for_his_prized_black_angus_show_herd_(b7559946-7c46-46bd-b54e-d53be80d9733).JPG"}, {"f": "p-ikefarm2-3.jpg", "y": "Today", "c": "Angus on the farm, with the show barn in the distance.", "w": 960, "h": 640, "cr": "National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:Eisenhower_Cows_(55fe63e9-5537-464d-b542-ee88e57cf771).jpg"}, {"f": "p-ikefarm2-4.jpg", "y": "Today", "c": "Black Angus are still raised here.", "w": 960, "h": 640, "cr": "National Park Service \u00b7 Public domain", "u": "https://commons.wikimedia.org/wiki/File:Black_angus_cattle_are_still_on_the_Eisenhower_National_Historic_Site_property_today._(5f224c42-ec0d-4974-b15e-e3ad5ae405a2).jpg"}, {"f": "p-ikefarm2-5.jpg", "y": "Today", "c": "A silo and cattle barn on the farm at a winter sunset.", "w": 960, "h": 720, "cr": "Jared Kofsky \u00b7 CC BY-SA 3.0", "u": "https://commons.wikimedia.org/wiki/File:Eisenhower_Farm_at_Sunset.JPG"}]});
+
 (function(){
 "use strict";
 var $=function(s){return document.querySelector(s)};
@@ -1880,7 +2142,7 @@ function texCanvas(step){
   if(step==null)step=S.step;
   if(step>0)UNITS.forEach(function(u){var a=unitPos(u,step-1),b=unitPos(u,step);if(!a||!b||(a[0]===b[0]&&a[1]===b[1]))return;var col=u.side==="u"?U:C;g.globalAlpha=.6;line([a,b],col,5);head([a,b],col);g.globalAlpha=1});
   P.forEach(function(p){if(p.k!=="stop")return;var q=px([p.lat,p.lon]);if(q[0]<0||q[0]>W||q[1]<0||q[1]>H)return;
-    g.beginPath();g.arc(q[0],q[1],15,0,7);g.fillStyle=(!S.useGps&&p.id===S.here)?brass:(p.layer==="L"?U:ink);g.fill();g.lineWidth=2.5;g.strokeStyle=cv_card;g.stroke();
+    g.beginPath();g.arc(q[0],q[1],15,0,7);g.fillStyle=(!S.useGps&&p.id===S.here)?brass:(p.layer==="L"?U:p.layer==="E"?cv("--ike"):ink);g.fill();g.lineWidth=2.5;g.strokeStyle=cv_card;g.stroke();
     g.fillStyle=cv_card;g.font="700 17px 'Barlow Condensed','Arial Narrow',Arial,sans-serif";g.textAlign="center";g.textBaseline="middle";g.fillText(p.num,q[0],q[1]+1)});
   if(step>=0){g.textAlign="center";g.textBaseline="middle";
     declutter(forces(step,false).filter(function(f){var q=px([f.lat,f.lon]);return q[0]>-40&&q[0]<W+40&&q[1]>-20&&q[1]<H+20}),function(f){return px([f.lat,f.lon])},106,38).forEach(function(f){
@@ -2004,7 +2266,7 @@ function setTab(t){
 function openSheet(id){
   var p=byId[id],pos=curPos(),h="";
   $("#sheetTitle").textContent=p.n;
-  $("#sheetWhen").textContent=(p.k==="stop"?(p.layer==="L"?"Lincoln tour, stop "+p.num.slice(1):p.num==="VC"?"Start":"Stop "+p.num)+(p.nps?" · NPS tour stop "+p.nps:"")+" · ":"")+(p.when||"Landmark");
+  $("#sheetWhen").textContent=(p.k==="stop"?(p.layer==="L"?"Lincoln tour, stop "+p.num.slice(1):p.layer==="E"?"Eisenhower tour, stop "+p.num.slice(1):p.num==="VC"?"Start":"Stop "+p.num)+(p.nps?" · NPS tour stop "+p.nps:"")+" · ":"")+(p.when||"Landmark");
   if(SUM[p.id]){h+='<ul class="short">';["What","Who","Why it matters"].forEach(function(k,i){h+="<li><b>"+k+"</b>"+esc(SUM[p.id][i])+"</li>"});h+="</ul>"}
   else h+="<p>"+esc(p.s)+"</p>";
   h+='<div class="acts">';
@@ -2012,6 +2274,11 @@ function openSheet(id){
   h+='<button class="btn ghost" data-act="map" data-id="'+p.id+'">Show on map</button>';
   h+='<a class="btn ghost" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination='+p.lat+","+p.lon+'">Directions</a></div>';
   if(IMG[p.id]){h+='<div class="gal">';IMG[p.id].forEach(function(m){h+='<figure><img loading="lazy" src="'+m.f+'" width="'+m.w+'" height="'+m.h+'" alt="'+esc(m.c)+'"><figcaption><b>'+esc(m.y)+"</b>"+esc(m.c)+'<a href="'+m.u+'" target="_blank" rel="noopener">'+esc(m.cr)+" · Wikimedia Commons</a></figcaption></figure>"});h+="</div>"}
+  if(p.inside){h+='<div class="inside"><h3>Step inside</h3><p>The house is shown by guided tour only in season. When it is closed, stand at the door and use these. They need a signal.</p><div class="acts">';
+    INSIDE.forEach(function(l,i){h+='<a class="btn'+(i?" ghost":"")+'" target="_blank" rel="noopener" href="'+l[2]+'">'+esc(l[0])+"</a>"});
+    h+='</div><details open><summary>Room by room, works offline</summary><ol class="rooms">';
+    ROOMS.forEach(function(r){h+="<li><b>"+esc(r.n)+"</b><i>"+esc(r.f)+"</i>"+esc(r.t)+(r.v?' <a target="_blank" rel="noopener" href="'+r.v+'">Watch this room</a>':"")+"</li>"});
+    h+="</ol></details></div>"}
   var sk=situPhase(p),hasSitu=!!(Z&&sample(p.lat,p.lon));
   if(hasSitu)h+='<figure class="situ"><div id="situBox"></div><figcaption><b>Map</b>'+(PH[sk]?"Where the divisions stood on "+TL[{d1a:1,d1b:3,d2:7,d3:11}[sk]].d+", "+TL[{d1a:1,d1b:3,d2:7,d3:11}[sk]].t+", with estimated strength. ":"The ground around this stop. ")+"Blue is Union, red Confederate. The ring marks this stop. North is up; the window is about a mile and a half wide.</figcaption></figure>";
   if(p.views&&p.views.length){
@@ -2045,7 +2312,7 @@ function setHere(id,keepGps){
 function renderTour(){
   var pos=curPos(),h="",TRL=tourOf(S.layer);
   document.querySelectorAll("#layers .chip").forEach(function(c){c.classList.toggle("on",c.dataset.l===S.layer)});
-  $("#tourLead").textContent=S.layer==="L"?"Lincoln's 24 hours in Gettysburg, in the order he lived them. Stops L1 to L3 are in town; L4 to L7 are a ten-minute walk inside the cemetery.":"All 22 stops in driving order, following the Park Service's auto tour. Tap any stop to read it.";
+  $("#tourLead").textContent=S.layer==="E"?"President Eisenhower's farm, next to the battlefield. Stops E1 to E8 are one easy loop on foot from the visitor parking, about an hour. E9 and E10 are on the battlefield and in town. The grounds are open sunrise to sunset; the house is open only in season, so E2 carries a room-by-room tour for the lawn.":S.layer==="L"?"Lincoln's 24 hours in Gettysburg, in the order he lived them. Stops L1 to L3 are in town; L4 to L7 are a ten-minute walk inside the cemetery.":"All 22 stops in driving order, following the Park Service's auto tour. Tap any stop to read it.";
   TRL.forEach(function(p){
     var tags=(p.star?'<span class="tag star">Must see</span>':"")+(p.opt?'<span class="tag">Optional</span>':"")+(p.nps?'<span class="tag">NPS '+p.nps+"</span>":"")+
       (S.useGps?'<span class="tag">'+fmtD(dist(pos,p))+"</span>":"");
@@ -2055,13 +2322,13 @@ function renderTour(){
   $("#tourList").innerHTML=h;
   var main=TRL.filter(function(p){return !p.opt}),nx=null,k=0;for(var q=0;q<main.length;q++){if(!S.done[main[q].id]){nx=main[q];k=q;break}}
   $("#tourNow").innerHTML=nx?'<div class="next"><div class="when">'+(k===0?"Start here":"Next stop")+" · "+(k+1)+" of "+main.length+(S.useGps?" · "+fmtD(dist(pos,nx))+" away":"")+"</div>"+(IMG[nx.id]?'<img loading="lazy" src="'+IMG[nx.id][0].f+'" alt="">':"")+"<h2>"+esc(nx.n)+"</h2><p>"+esc(SUM[nx.id][0])+
-    '</p><div class="acts"><button class="btn open" data-id="'+nx.id+'">Open this stop</button><a class="btn ghost" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination='+nx.lat+","+nx.lon+'">Drive there</a></div></div>':
+    '</p><div class="acts"><button class="btn open" data-id="'+nx.id+'">Open this stop</button><a class="btn ghost" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination='+nx.lat+","+nx.lon+'">'+(S.layer==="B"?"Drive there":"Directions")+'</a></div></div>':
     '<div class="next"><h2>Tour complete</h2><p>You have seen every stop. The optional stops and the reading list are still here.</p></div>';
 }
 
 /* ---------- map ---------- */
 var reliefOv=null,map=null,baseLayer=null,phaseLayer=null,meMarker=null,meAcc=null,pinEls={},mapFitted=false,tilesOk=false;
-function fitField(){if(!map)return;var el=$("#map");if(!el.clientWidth)return;map.fitBounds([[39.7845,-77.2640],[39.8500,-77.2090]]);mapFitted=true;drawUnits()}
+function fitField(){if(!map)return;var el=$("#map");if(!el.clientWidth)return;map.fitBounds([[39.7845,-77.2690],[39.8500,-77.2090]]);mapFitted=true;drawUnits()}
 function lbl(at,text,cls,z){return L.marker(at,{interactive:false,keyboard:false,zIndexOffset:z||0,icon:L.divIcon({className:"",html:'<div class="maplbl '+(cls||"")+'">'+esc(text)+"</div>",iconSize:[0,0]})})}
 function arrow(pts,color,dash){
   var out=[L.polyline(pts,{color:color,weight:4,opacity:.95,dashArray:dash||null,interactive:false})];
@@ -2134,7 +2401,7 @@ function initMap(){
     tiles.addTo(map);
   }catch(e){}
   P.forEach(function(p){
-    var stop=p.k==="stop",html=stop?'<div class="pin'+(p.opt?" opt":"")+(p.layer==="L"?" lin":"")+'" style="width:28px;height:28px">'+p.num+"<em>"+esc(p.n)+"</em></div>":'<div class="dot" style="width:14px;height:14px"></div>';
+    var stop=p.k==="stop",html=stop?'<div class="pin'+(p.opt?" opt":"")+(p.layer==="L"?" lin":p.layer==="E"?" ike":"")+'" style="width:28px;height:28px">'+p.num+"<em>"+esc(p.n)+"</em></div>":'<div class="dot" style="width:14px;height:14px"></div>';
     var m=L.marker([p.lat,p.lon],{title:p.n,zIndexOffset:stop?600:300,icon:L.divIcon({className:"",html:html,iconSize:stop?[28,28]:[14,14],iconAnchor:stop?[14,14]:[7,7]})}).addTo(map);
     m.on("click",function(){openSheet(p.id)});
     if(stop){var el=m.getElement();if(el)pinEls[p.id]=el.firstChild}
@@ -2285,10 +2552,20 @@ function drawLook(){
   $("#recal").hidden=!(S.sensor&&Math.abs(S.offset)>0.5);
   updateSit(pos,hd);
 }
+var ovlFor=null;
+function ovlClose(){$("#ovl").hidden=true;$("#ovlCtl").hidden=true;$("#scene").classList.remove("ovl");var b=$("#ovlThumbs").querySelector(".on");if(b)b.classList.remove("on");$("#ovlCap").textContent="Tap a picture to lay it over the view."}
+function ovlSync(id){ // pictures of the stop you are at, to fade over the camera
+  if(ovlFor===id)return;ovlFor=id;ovlClose();
+  var list=IMG[id]||[],h="";list.forEach(function(m,i){h+='<button data-i="'+i+'" aria-label="'+esc(m.y+": "+m.c)+'"><img src="'+m.f+'" alt=""></button>'});
+  $("#ovlThumbs").innerHTML=h;$("#ovlbar").hidden=true;$("#ovlBtn").hidden=!list.length
+}
+function ovlShow(i){var m=(IMG[ovlFor]||[])[i];if(!m)return;var im=$("#ovl");im.src=m.f;im.hidden=false;im.style.opacity=$("#ovlOp").value/100;
+  $("#ovlCtl").hidden=false;$("#scene").classList.add("ovl");$("#ovlCap").innerHTML="<b>"+esc(m.y)+"</b>"+esc(m.c);
+  [].forEach.call($("#ovlThumbs").children,function(b){b.classList.toggle("on",+b.dataset.i===i)})}
 function updateSit(pos,hd){
   var nr=nearestStop(pos),p=nr.p,views=p.views||[];
   if(sitStop!==p.id){
-    sitStop=p.id;sitActive=-2;
+    sitStop=p.id;sitActive=-2;ovlSync(p.id);
     var ch=$("#sitChips"),h="";views.forEach(function(v,i){h+='<button class="chip" data-i="'+i+'"></button>'});ch.innerHTML=h;ch.scrollLeft=0;
   }
   $("#sitTitle").textContent=nr.d<220?(S.useGps?"You are at ":"")+p.n:fmtD(nr.d)+" from "+p.n;
@@ -2340,6 +2617,11 @@ function init(){
     else{closeSheet();setTab("map");if(map)setTimeout(function(){map.setView([byId[id].lat,byId[id].lon],16)},30)}});
   $("#here").addEventListener("change",function(e){var v=e.target.value;if(v==="gps"){S.useGps=true;sitStop=null;lookDirty=true;markHere()}else setHere(v)});
   $("#live").addEventListener("click",goLive);
+  $("#ovlBtn").addEventListener("click",function(){$("#ovlbar").hidden=false;$("#ovlBtn").hidden=true});
+  $("#ovlX").addEventListener("click",function(){ovlClose();$("#ovlbar").hidden=true;$("#ovlBtn").hidden=!(IMG[ovlFor]||[]).length});
+  $("#ovlThumbs").addEventListener("click",function(e){var b=e.target.closest("button");if(b)ovlShow(+b.dataset.i)});
+  $("#ovlOp").addEventListener("input",function(e){$("#ovl").style.opacity=e.target.value/100});
+  $("#ovlOff").addEventListener("click",ovlClose);
   $("#sitMore").addEventListener("click",function(){if(sitStop)openSheet(sitStop)});
   $("#b3d").addEventListener("click",function(){set3d(!S.m3)});
   $("#views3d").addEventListener("click",function(e){var b=e.target.closest("button");if(b&&T3)view3d(b.dataset.v)});
@@ -2355,7 +2637,7 @@ function init(){
     else{S.heading=bb;lookDirty=true}});
   // drag to turn (or to nudge the compass when live)
   var sc=$("#scene"),drag=false,lx=0;
-  sc.addEventListener("pointerdown",function(e){if(e.target.closest("button,label,select"))return;drag=true;lx=e.clientX;dragMoved=0});
+  sc.addEventListener("pointerdown",function(e){if(e.target.closest("button,label,select,#ovlbar"))return;drag=true;lx=e.clientX;dragMoved=0});
   window.addEventListener("pointermove",function(e){if(!drag)return;var dx=e.clientX-lx;lx=e.clientX;dragMoved+=Math.abs(dx);var deg=dx/(lastW||1)*S.fov;
     if(S.sensor&&!S.pic){S.offset=n180(S.offset-deg);S.heading=(S.raw+S.offset+360)%360}else S.heading=(S.heading-deg+360)%360;lookDirty=true});
   window.addEventListener("pointerup",function(){drag=false});
@@ -2379,7 +2661,7 @@ try{if("serviceWorker" in navigator&&location.protocol==="https:")navigator.serv
   setTimeout(function(){var q=[];Object.keys(IMG).forEach(function(k){IMG[k].forEach(function(m){q.push(m.f)})});
     (function nx(){var f=q.shift();if(!f)return;fetch(f).catch(function(){}).then(function(){setTimeout(nx,150)})})()},6000); // keep the pictures for use without signal
 }).catch(function(){})}catch(e){}
-window.__gb={elev:elev,set3d:set3d,S:S,sun:sun,sunTimes:sunTimes,brg:brg,dist:dist};
+window.__gb={elev:elev,set3d:set3d,S:S,sun:sun,sunTimes:sunTimes,brg:brg,dist:dist,openSheet:openSheet,setHere:setHere,setTab:setTab,dirty:function(){lookDirty=true},get map(){return map}};
 })();
 
 </script>
